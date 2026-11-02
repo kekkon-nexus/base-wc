@@ -54,6 +54,22 @@ export namespace Components {
     }
     interface BaseNumberField {
     }
+    interface BaseOtpField {
+        /**
+          * Submits the form when the code is full and valid.
+          * @default false
+         */
+        "autosubmit": boolean;
+        /**
+          * The number of characters in a full code.
+          * @default 0
+         */
+        "length": number;
+        /**
+          * Runs before filtering, for example to uppercase.
+         */
+        "normalize"?: (value: string) => string;
+    }
     /**
      * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
      */
@@ -138,6 +154,12 @@ declare global {
         prototype: HTMLBaseNumberFieldElement;
         new (): HTMLBaseNumberFieldElement;
     };
+    interface HTMLBaseOtpFieldElement extends Components.BaseOtpField, HTMLStencilElement {
+    }
+    var HTMLBaseOtpFieldElement: {
+        prototype: HTMLBaseOtpFieldElement;
+        new (): HTMLBaseOtpFieldElement;
+    };
     /**
      * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
      */
@@ -154,6 +176,7 @@ declare global {
         "base-form-error": HTMLBaseFormErrorElement;
         "base-form-errors": HTMLBaseFormErrorsElement;
         "base-number-field": HTMLBaseNumberFieldElement;
+        "base-otp-field": HTMLBaseOtpFieldElement;
         "base-rangegroup": HTMLBaseRangegroupElement;
     }
 }
@@ -207,6 +230,22 @@ declare namespace LocalJSX {
     }
     interface BaseNumberField {
     }
+    interface BaseOtpField {
+        /**
+          * Submits the form when the code is full and valid.
+          * @default false
+         */
+        "autosubmit"?: boolean;
+        /**
+          * The number of characters in a full code.
+          * @default 0
+         */
+        "length"?: number;
+        /**
+          * Runs before filtering, for example to uppercase.
+         */
+        "normalize"?: (value: string) => string;
+    }
     /**
      * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
      */
@@ -254,6 +293,10 @@ declare namespace LocalJSX {
     interface BaseFormErrorAttributes {
         "match": string;
     }
+    interface BaseOtpFieldAttributes {
+        "length": number;
+        "autosubmit": boolean;
+    }
     interface BaseRangegroupAttributes {
         "min": number;
         "max": number;
@@ -268,6 +311,7 @@ declare namespace LocalJSX {
         "base-form-error": Omit<BaseFormError, keyof BaseFormErrorAttributes> & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes]?: BaseFormError[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `attr:${K}`]?: BaseFormErrorAttributes[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `prop:${K}`]?: BaseFormError[K] };
         "base-form-errors": BaseFormErrors;
         "base-number-field": BaseNumberField;
+        "base-otp-field": Omit<BaseOtpField, keyof BaseOtpFieldAttributes> & { [K in keyof BaseOtpField & keyof BaseOtpFieldAttributes]?: BaseOtpField[K] } & { [K in keyof BaseOtpField & keyof BaseOtpFieldAttributes as `attr:${K}`]?: BaseOtpFieldAttributes[K] } & { [K in keyof BaseOtpField & keyof BaseOtpFieldAttributes as `prop:${K}`]?: BaseOtpField[K] };
         "base-rangegroup": Omit<BaseRangegroup, keyof BaseRangegroupAttributes> & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes]?: BaseRangegroup[K] } & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes as `attr:${K}`]?: BaseRangegroupAttributes[K] } & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes as `prop:${K}`]?: BaseRangegroup[K] };
     }
 }
@@ -281,6 +325,7 @@ declare module "@stencil/core" {
             "base-form-error": LocalJSX.IntrinsicElements["base-form-error"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorElement>;
             "base-form-errors": LocalJSX.IntrinsicElements["base-form-errors"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorsElement>;
             "base-number-field": LocalJSX.IntrinsicElements["base-number-field"] & JSXBase.HTMLAttributes<HTMLBaseNumberFieldElement>;
+            "base-otp-field": LocalJSX.IntrinsicElements["base-otp-field"] & JSXBase.HTMLAttributes<HTMLBaseOtpFieldElement>;
             /**
              * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
              */
