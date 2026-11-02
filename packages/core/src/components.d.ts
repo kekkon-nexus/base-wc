@@ -52,6 +52,8 @@ export namespace Components {
 		form?: string;
 	};
     }
+    interface BaseNumberField {
+    }
     /**
      * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
      */
@@ -130,6 +132,12 @@ declare global {
         prototype: HTMLBaseFormErrorsElement;
         new (): HTMLBaseFormErrorsElement;
     };
+    interface HTMLBaseNumberFieldElement extends Components.BaseNumberField, HTMLStencilElement {
+    }
+    var HTMLBaseNumberFieldElement: {
+        prototype: HTMLBaseNumberFieldElement;
+        new (): HTMLBaseNumberFieldElement;
+    };
     /**
      * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
      */
@@ -145,6 +153,7 @@ declare global {
         "base-field-errors": HTMLBaseFieldErrorsElement;
         "base-form-error": HTMLBaseFormErrorElement;
         "base-form-errors": HTMLBaseFormErrorsElement;
+        "base-number-field": HTMLBaseNumberFieldElement;
         "base-rangegroup": HTMLBaseRangegroupElement;
     }
 }
@@ -195,6 +204,8 @@ declare namespace LocalJSX {
 		fields?: Record<string, string>;
 		form?: string;
 	};
+    }
+    interface BaseNumberField {
     }
     /**
      * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
@@ -256,6 +267,7 @@ declare namespace LocalJSX {
         "base-field-errors": BaseFieldErrors;
         "base-form-error": Omit<BaseFormError, keyof BaseFormErrorAttributes> & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes]?: BaseFormError[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `attr:${K}`]?: BaseFormErrorAttributes[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `prop:${K}`]?: BaseFormError[K] };
         "base-form-errors": BaseFormErrors;
+        "base-number-field": BaseNumberField;
         "base-rangegroup": Omit<BaseRangegroup, keyof BaseRangegroupAttributes> & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes]?: BaseRangegroup[K] } & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes as `attr:${K}`]?: BaseRangegroupAttributes[K] } & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes as `prop:${K}`]?: BaseRangegroup[K] };
     }
 }
@@ -268,6 +280,7 @@ declare module "@stencil/core" {
             "base-field-errors": LocalJSX.IntrinsicElements["base-field-errors"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorsElement>;
             "base-form-error": LocalJSX.IntrinsicElements["base-form-error"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorElement>;
             "base-form-errors": LocalJSX.IntrinsicElements["base-form-errors"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorsElement>;
+            "base-number-field": LocalJSX.IntrinsicElements["base-number-field"] & JSXBase.HTMLAttributes<HTMLBaseNumberFieldElement>;
             /**
              * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
              */
