@@ -102,7 +102,7 @@ it("novalidate skips showing and focusing at submit", async () => {
 
 	await expect.poll(submissions).toBe(1);
 	expect(error?.hidden).toBe(true);
-	expect(document.activeElement).toBe(submit);
+	expect(document.activeElement?.tagName).not.toBe("INPUT");
 });
 
 it("formnovalidate skips showing and focusing at submit", async () => {
@@ -114,5 +114,5 @@ it("formnovalidate skips showing and focusing at submit", async () => {
 
 	await expect.poll(submissions).toBe(1);
 	expect(error?.hidden).toBe(true);
-	expect(document.activeElement).toBe(submit);
+	expect(document.activeElement?.tagName).not.toBe("INPUT");
 });

@@ -272,7 +272,8 @@ it("submit mode: editing clears the key, and returning restores it", async () =>
 	runs[0]?.resolve("taken");
 	await expect.poll(() => input.validationMessage).toBe("taken");
 
-	await userEvent.keyboard("{End}b");
+	input.setSelectionRange(1, 1);
+	await userEvent.keyboard("b");
 	expect(input.validationMessage).toBe("");
 
 	await userEvent.keyboard("{Backspace}");
