@@ -37,6 +37,21 @@ export namespace Components {
     }
     interface BaseFieldErrors {
     }
+    interface BaseFormError {
+        /**
+          * The form-level key this message is for. Without it, this is the catch-all.
+         */
+        "match"?: string;
+    }
+    interface BaseFormErrors {
+        /**
+          * Server errors. Assign a new object: mutating this one is not seen.
+         */
+        "errors"?: {
+		fields?: Record<string, string>;
+		form?: string;
+	};
+    }
 }
 declare global {
     interface HTMLBaseFieldElement extends Components.BaseField, HTMLStencilElement {
@@ -57,10 +72,24 @@ declare global {
         prototype: HTMLBaseFieldErrorsElement;
         new (): HTMLBaseFieldErrorsElement;
     };
+    interface HTMLBaseFormErrorElement extends Components.BaseFormError, HTMLStencilElement {
+    }
+    var HTMLBaseFormErrorElement: {
+        prototype: HTMLBaseFormErrorElement;
+        new (): HTMLBaseFormErrorElement;
+    };
+    interface HTMLBaseFormErrorsElement extends Components.BaseFormErrors, HTMLStencilElement {
+    }
+    var HTMLBaseFormErrorsElement: {
+        prototype: HTMLBaseFormErrorsElement;
+        new (): HTMLBaseFormErrorsElement;
+    };
     interface HTMLElementTagNameMap {
         "base-field": HTMLBaseFieldElement;
         "base-field-error": HTMLBaseFieldErrorElement;
         "base-field-errors": HTMLBaseFieldErrorsElement;
+        "base-form-error": HTMLBaseFormErrorElement;
+        "base-form-errors": HTMLBaseFormErrorsElement;
     }
 }
 declare namespace LocalJSX {
@@ -96,6 +125,21 @@ declare namespace LocalJSX {
     }
     interface BaseFieldErrors {
     }
+    interface BaseFormError {
+        /**
+          * The form-level key this message is for. Without it, this is the catch-all.
+         */
+        "match"?: string;
+    }
+    interface BaseFormErrors {
+        /**
+          * Server errors. Assign a new object: mutating this one is not seen.
+         */
+        "errors"?: {
+		fields?: Record<string, string>;
+		form?: string;
+	};
+    }
 
     interface BaseFieldAttributes {
         "validateOn": "input" | "blur" | "submit";
@@ -105,11 +149,16 @@ declare namespace LocalJSX {
     interface BaseFieldErrorAttributes {
         "match": string;
     }
+    interface BaseFormErrorAttributes {
+        "match": string;
+    }
 
     interface IntrinsicElements {
         "base-field": Omit<BaseField, keyof BaseFieldAttributes> & { [K in keyof BaseField & keyof BaseFieldAttributes]?: BaseField[K] } & { [K in keyof BaseField & keyof BaseFieldAttributes as `attr:${K}`]?: BaseFieldAttributes[K] } & { [K in keyof BaseField & keyof BaseFieldAttributes as `prop:${K}`]?: BaseField[K] };
         "base-field-error": Omit<BaseFieldError, keyof BaseFieldErrorAttributes> & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes]?: BaseFieldError[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `attr:${K}`]?: BaseFieldErrorAttributes[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `prop:${K}`]?: BaseFieldError[K] };
         "base-field-errors": BaseFieldErrors;
+        "base-form-error": Omit<BaseFormError, keyof BaseFormErrorAttributes> & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes]?: BaseFormError[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `attr:${K}`]?: BaseFormErrorAttributes[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `prop:${K}`]?: BaseFormError[K] };
+        "base-form-errors": BaseFormErrors;
     }
 }
 export { LocalJSX as JSX };
@@ -119,6 +168,8 @@ declare module "@stencil/core" {
             "base-field": LocalJSX.IntrinsicElements["base-field"] & JSXBase.HTMLAttributes<HTMLBaseFieldElement>;
             "base-field-error": LocalJSX.IntrinsicElements["base-field-error"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorElement>;
             "base-field-errors": LocalJSX.IntrinsicElements["base-field-errors"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorsElement>;
+            "base-form-error": LocalJSX.IntrinsicElements["base-form-error"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorElement>;
+            "base-form-errors": LocalJSX.IntrinsicElements["base-form-errors"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorsElement>;
         }
     }
 }

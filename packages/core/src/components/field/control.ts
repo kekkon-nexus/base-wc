@@ -15,6 +15,7 @@ export const EVENTS: string[] = [
 	"focusout",
 	"invalid",
 	"base-field-validity",
+	"base-field-reset",
 ];
 
 export function getControl(field: Element | null): Control | undefined {

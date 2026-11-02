@@ -33,6 +33,7 @@ export class FieldError {
 		const control = getControl(field);
 		if (event?.type === "invalid") this.#reported = true;
 		if (control?.validity.valid) this.#reported = false;
+		if (event?.type === "base-field-reset") this.#reported = false;
 		const shown =
 			field !== null &&
 			control !== undefined &&
