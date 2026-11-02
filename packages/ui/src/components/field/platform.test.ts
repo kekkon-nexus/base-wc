@@ -55,23 +55,23 @@ it.runIf(server.browser === "chrome")(
 	"the native invalid state stays unexposed after user-invalid",
 	async () => {
 		const input = mount(`<input required>`);
-		expect(await commands.computedInvalid("input")).toBe("false");
+		expect(await commands.computedProperty("input", "invalid")).toBe("false");
 
 		await userEvent.type(input, "a");
 		await userEvent.clear(input);
 		await userEvent.tab();
 
 		expect(input.matches(":user-invalid")).toBe(true);
-		expect(await commands.computedInvalid("input")).toBe("false");
+		expect(await commands.computedProperty("input", "invalid")).toBe("false");
 	},
 );
 
 it.runIf(server.browser === "chrome")(
-	"computedInvalid reads aria-invalid",
+	"computedProperty reads aria-invalid",
 	async () => {
 		mount(`<input aria-invalid="true">`);
 
-		expect(await commands.computedInvalid("input")).toBe("true");
+		expect(await commands.computedProperty("input", "invalid")).toBe("true");
 	},
 );
 

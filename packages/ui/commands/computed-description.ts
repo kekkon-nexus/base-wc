@@ -72,14 +72,14 @@ export const computedDescription: BrowserCommand<[selector: string]> = async (
 /**
  * @param context the command context, holding the WebdriverIO browser
  * @param selector a CSS selector for the element
- * @returns the element's exposed invalid state, such as `"true"` or `"false"`
+ * @param name the accessibility property to read
+ * @returns the value of that accessibility property, such as `"true"` for `invalid`
  */
-export const computedInvalid: BrowserCommand<[selector: string]> = async (
-	context,
-	selector,
-) => {
+export const computedProperty: BrowserCommand<
+	[selector: string, name: string]
+> = async (context, selector, name) => {
 	const node = await axNode(context, selector);
 	return String(
-		node?.properties?.find(({ name }) => name === "invalid")?.value.value,
+		node?.properties?.find((property) => property.name === name)?.value.value,
 	);
 };

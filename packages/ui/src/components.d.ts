@@ -9,9 +9,11 @@ export namespace Components {
     }
     interface BaseFieldError {
         /**
-          * The validity key this message is for. Without it, the message shows for any invalid value.
+          * The key this message is for: a native `validity` key or a custom key. Without it, this is the catch-all.
          */
-        "match"?: Exclude<keyof ValidityState, "valid">;
+        "match"?: string;
+    }
+    interface BaseFieldErrors {
     }
 }
 declare global {
@@ -27,9 +29,16 @@ declare global {
         prototype: HTMLBaseFieldErrorElement;
         new (): HTMLBaseFieldErrorElement;
     };
+    interface HTMLBaseFieldErrorsElement extends Components.BaseFieldErrors, HTMLStencilElement {
+    }
+    var HTMLBaseFieldErrorsElement: {
+        prototype: HTMLBaseFieldErrorsElement;
+        new (): HTMLBaseFieldErrorsElement;
+    };
     interface HTMLElementTagNameMap {
         "base-field": HTMLBaseFieldElement;
         "base-field-error": HTMLBaseFieldErrorElement;
+        "base-field-errors": HTMLBaseFieldErrorsElement;
     }
 }
 declare namespace LocalJSX {
@@ -37,9 +46,11 @@ declare namespace LocalJSX {
     }
     interface BaseFieldError {
         /**
-          * The validity key this message is for. Without it, the message shows for any invalid value.
+          * The key this message is for: a native `validity` key or a custom key. Without it, this is the catch-all.
          */
-        "match"?: Exclude<keyof ValidityState, "valid">;
+        "match"?: string;
+    }
+    interface BaseFieldErrors {
     }
 
     interface BaseFieldErrorAttributes {
@@ -49,6 +60,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "base-field": BaseField;
         "base-field-error": Omit<BaseFieldError, keyof BaseFieldErrorAttributes> & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes]?: BaseFieldError[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `attr:${K}`]?: BaseFieldErrorAttributes[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `prop:${K}`]?: BaseFieldError[K] };
+        "base-field-errors": BaseFieldErrors;
     }
 }
 export { LocalJSX as JSX };
@@ -57,6 +69,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "base-field": LocalJSX.IntrinsicElements["base-field"] & JSXBase.HTMLAttributes<HTMLBaseFieldElement>;
             "base-field-error": LocalJSX.IntrinsicElements["base-field-error"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorElement>;
+            "base-field-errors": LocalJSX.IntrinsicElements["base-field-errors"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorsElement>;
         }
     }
 }
