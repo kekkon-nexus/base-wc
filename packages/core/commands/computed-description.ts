@@ -19,6 +19,7 @@ function* documents(node: DomNode): Generator<DomNode> {
 
 interface AxNode {
 	description?: { value: string };
+	role?: { value: string };
 	properties?: { name: string; value: { value: unknown } }[];
 }
 
@@ -79,6 +80,7 @@ export const computedProperty: BrowserCommand<
 	[selector: string, name: string]
 > = async (context, selector, name) => {
 	const node = await axNode(context, selector);
+	if (name === "role") return String(node?.role?.value);
 	return String(
 		node?.properties?.find((property) => property.name === name)?.value.value,
 	);

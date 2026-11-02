@@ -52,6 +52,52 @@ export namespace Components {
 		form?: string;
 	};
     }
+    /**
+     * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
+     */
+    interface BaseRangegroup {
+        /**
+          * Disables every thumb.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * @param index the thumb's position in document order
+          * @returns the thumb
+         */
+        "getRangeInput": (index: number) => Promise<HTMLInputElement | undefined>;
+        /**
+          * @returns the thumbs, in document order
+          * @readonly
+         */
+        "inputs": HTMLInputElement[];
+        /**
+          * Passed to inputs that omit `max`.
+          * @default 100
+         */
+        "max": number;
+        /**
+          * Passed to inputs that omit `min`.
+          * @default 0
+         */
+        "min": number;
+        /**
+          * @param index the thumb's position in document order
+          * @param value the value to set, kept between its neighbors
+          * @returns a promise that resolves once it is set
+         */
+        "setRangeValue": (index: number, value: number) => Promise<void>;
+        /**
+          * The minimum distance between adjacent thumbs.
+          * @default 0
+         */
+        "stepBetween": number;
+        /**
+          * @returns every thumb's value, in document order
+          * @readonly
+         */
+        "values": number[];
+    }
 }
 declare global {
     interface HTMLBaseFieldElement extends Components.BaseField, HTMLStencilElement {
@@ -84,12 +130,22 @@ declare global {
         prototype: HTMLBaseFormErrorsElement;
         new (): HTMLBaseFormErrorsElement;
     };
+    /**
+     * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
+     */
+    interface HTMLBaseRangegroupElement extends Components.BaseRangegroup, HTMLStencilElement {
+    }
+    var HTMLBaseRangegroupElement: {
+        prototype: HTMLBaseRangegroupElement;
+        new (): HTMLBaseRangegroupElement;
+    };
     interface HTMLElementTagNameMap {
         "base-field": HTMLBaseFieldElement;
         "base-field-error": HTMLBaseFieldErrorElement;
         "base-field-errors": HTMLBaseFieldErrorsElement;
         "base-form-error": HTMLBaseFormErrorElement;
         "base-form-errors": HTMLBaseFormErrorsElement;
+        "base-rangegroup": HTMLBaseRangegroupElement;
     }
 }
 declare namespace LocalJSX {
@@ -140,6 +196,41 @@ declare namespace LocalJSX {
 		form?: string;
 	};
     }
+    /**
+     * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
+     */
+    interface BaseRangegroup {
+        /**
+          * Disables every thumb.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * @returns the thumbs, in document order
+          * @readonly
+         */
+        "inputs"?: HTMLInputElement[];
+        /**
+          * Passed to inputs that omit `max`.
+          * @default 100
+         */
+        "max"?: number;
+        /**
+          * Passed to inputs that omit `min`.
+          * @default 0
+         */
+        "min"?: number;
+        /**
+          * The minimum distance between adjacent thumbs.
+          * @default 0
+         */
+        "stepBetween"?: number;
+        /**
+          * @returns every thumb's value, in document order
+          * @readonly
+         */
+        "values"?: number[];
+    }
 
     interface BaseFieldAttributes {
         "validateOn": "input" | "blur" | "submit";
@@ -152,6 +243,12 @@ declare namespace LocalJSX {
     interface BaseFormErrorAttributes {
         "match": string;
     }
+    interface BaseRangegroupAttributes {
+        "min": number;
+        "max": number;
+        "stepBetween": number;
+        "disabled": boolean;
+    }
 
     interface IntrinsicElements {
         "base-field": Omit<BaseField, keyof BaseFieldAttributes> & { [K in keyof BaseField & keyof BaseFieldAttributes]?: BaseField[K] } & { [K in keyof BaseField & keyof BaseFieldAttributes as `attr:${K}`]?: BaseFieldAttributes[K] } & { [K in keyof BaseField & keyof BaseFieldAttributes as `prop:${K}`]?: BaseField[K] };
@@ -159,6 +256,7 @@ declare namespace LocalJSX {
         "base-field-errors": BaseFieldErrors;
         "base-form-error": Omit<BaseFormError, keyof BaseFormErrorAttributes> & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes]?: BaseFormError[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `attr:${K}`]?: BaseFormErrorAttributes[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `prop:${K}`]?: BaseFormError[K] };
         "base-form-errors": BaseFormErrors;
+        "base-rangegroup": Omit<BaseRangegroup, keyof BaseRangegroupAttributes> & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes]?: BaseRangegroup[K] } & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes as `attr:${K}`]?: BaseRangegroupAttributes[K] } & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes as `prop:${K}`]?: BaseRangegroup[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -170,6 +268,10 @@ declare module "@stencil/core" {
             "base-field-errors": LocalJSX.IntrinsicElements["base-field-errors"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorsElement>;
             "base-form-error": LocalJSX.IntrinsicElements["base-form-error"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorElement>;
             "base-form-errors": LocalJSX.IntrinsicElements["base-form-errors"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorsElement>;
+            /**
+             * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
+             */
+            "base-rangegroup": LocalJSX.IntrinsicElements["base-rangegroup"] & JSXBase.HTMLAttributes<HTMLBaseRangegroupElement>;
         }
     }
 }
