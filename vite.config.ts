@@ -8,11 +8,11 @@ import { defineConfig } from "vite-plus";
 const config: ReturnType<typeof defineConfig> = defineConfig({
 	fmt: {
 		...oxfmt,
-		ignorePatterns: ["packages/ui/src/components.d.ts"],
+		ignorePatterns: ["packages/core/src/components.d.ts"],
 	},
 	lint: {
 		extends: [oxlint, vp],
-		ignorePatterns: ["packages/ui/src/components.d.ts"],
+		ignorePatterns: ["packages/core/src/components.d.ts"],
 		options: {
 			typeAware: true,
 			typeCheck: true,

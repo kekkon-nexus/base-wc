@@ -2,14 +2,14 @@
 	"name": "@base-wc/core",
 	"version": "0.0.0",
 	"description": "",
-	"homepage": "https://github.com/kekkon-nexus/ui#readme",
-	"bugs": "https://github.com/kekkon-nexus/ui/issues",
+	"homepage": "https://github.com/kekkon-nexus/base-wc#readme",
+	"bugs": "https://github.com/kekkon-nexus/base-wc/issues",
 	"license": "MIT",
 	"author": "Ryan Suhartanto <suhartanto@kekkon.nexus>",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/kekkon-nexus/ui.git",
-		"directory": "packages/ui"
+		"url": "git+https://github.com/kekkon-nexus/base-wc.git",
+		"directory": "packages/core"
 	},
 	"files": [
 		"dist/"

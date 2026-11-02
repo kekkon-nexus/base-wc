@@ -15,7 +15,7 @@
         "vite-plus": "catalog:",
       },
     },
-    "packages/ui": {
+    "packages/core": {
       "name": "@base-wc/core",
       "version": "0.0.0",
       "dependencies": {
@@ -65,7 +65,7 @@
 
     "@babel/runtime": ["@babel/runtime@7.29.10", "", {}, "sha512-NpugTzbKgGrNe45Ui32cN8vCFFMxVtP/9rtfwv0nP5FRDAjvYBxJcLVpYA9mr1jxP6cnIT7x9LUzuDTbWYYNRA=="],
 
-    "@base-wc/core": ["@base-wc/core@workspace:packages/ui"],
+    "@base-wc/core": ["@base-wc/core@workspace:packages/core"],
 
     "@blazediff/core": ["@blazediff/core@1.10.0", "", {}, "sha512-AOQff0zgR7cGsZL+4E7hVkmujoPUpm0J9xzWGWZj5wCjd3gmxESXAPfKyuzs93VdpQNFhHlBhfOjrcZ+XTERtQ=="],
 
