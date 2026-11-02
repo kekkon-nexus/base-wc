@@ -6,9 +6,11 @@ import {
 	getControl,
 	setState,
 } from "@/components/field/control";
+import { warn, warnMissingErrors } from "@/utils/dev";
 import { requestSubmit } from "@/utils/form";
 import { focusFirstInvalid, mayFocus } from "@/utils/invalid-focus";
 import { addSubmitCheck } from "@/utils/submit-checks";
+import { RESERVED_KEYS } from "@/utils/validity";
 
 const VALIDATING = "validating";
 
@@ -167,6 +169,7 @@ export class Field {
 	#link(control: Control): void {
 		if (control === this.#linked) return;
 		this.#linked = control;
+		if (__DEV__) warnMissingErrors(this.host, control);
 		if (!this.manualAria) {
 			const parts = [
 				this.host.querySelector("base-field-description"),
@@ -205,6 +208,15 @@ export class Field {
 			focusFirstInvalid(control, this.host);
 		}
 		if (event) this.#trigger(control, event.type);
+		if (__DEV__ && control.validity.customError) {
+			const message = control.validationMessage;
+			if (
+				RESERVED_KEYS.has(message) &&
+				!(message === VALIDATING && this.#run)
+			) {
+				warn(`"${message}" is reserved and can't be a custom key.`);
+			}
+		}
 		if (control.validity.valid) this.#reported = false;
 
 		if (event?.type === "focusout" && event.target === control) {

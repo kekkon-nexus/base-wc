@@ -10,6 +10,13 @@ const NATIVE_KEYS = [
 	"badInput",
 ] as const;
 
+export const RESERVED_KEYS: Set<string> = new Set<string>([
+	...NATIVE_KEYS,
+	"customError",
+	"valid",
+	"validating",
+]);
+
 /**
  * A custom key travels as the control's custom validity message.
  *

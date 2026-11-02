@@ -27,6 +27,9 @@ const config: ReturnType<typeof defineConfig> = defineConfig({
 		env: {
 			node: true,
 		},
+		globals: {
+			__DEV__: "readonly",
+		},
 		overrides: await Array.fromAsync(glob("packages/*"), (dir) => ({
 			files: [`${dir}/**`],
 			env: { browser: true },

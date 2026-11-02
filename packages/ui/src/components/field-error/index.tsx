@@ -1,6 +1,7 @@
 import { AttachInternals, Component, Element, Prop } from "@stencil/core";
 
 import { EVENTS, getControl, setState } from "@/components/field/control";
+import { warn } from "@/utils/dev";
 import { failingKeys } from "@/utils/validity";
 
 @Component({
@@ -42,6 +43,11 @@ export class FieldError {
 	};
 
 	connectedCallback(): void {
+		if (__DEV__ && (this.match === "customError" || this.match === "valid")) {
+			warn(
+				`match="${this.match}" never shows: use a custom key or a catch-all.`,
+			);
+		}
 		this.#update();
 		const field = this.host.closest("base-field");
 		if (!field) return;

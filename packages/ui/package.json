@@ -16,16 +16,19 @@
 	],
 	"type": "module",
 	"sideEffects": [
-		"./dist/components/*/define.js"
+		"./dist/components/*/define.js",
+		"./dist/dev/components/*/define.js"
 	],
 	"exports": {
 		"./*": {
-			"module-sync": "./dist/components/*/index.js",
-			"types": "./dist/components/*/index.d.ts"
+			"types": "./dist/components/*/index.d.ts",
+			"development": "./dist/dev/components/*/index.js",
+			"default": "./dist/components/*/index.js"
 		},
 		"./*/define": {
-			"module-sync": "./dist/components/*/define.js",
-			"types": "./dist/components/*/define.d.ts"
+			"types": "./dist/components/*/define.d.ts",
+			"development": "./dist/dev/components/*/define.js",
+			"default": "./dist/components/*/define.js"
 		},
 		"./package.json": "./package.json"
 	},

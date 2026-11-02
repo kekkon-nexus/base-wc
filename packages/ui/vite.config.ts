@@ -12,7 +12,28 @@ import { noSelfRegister } from "./plugins/no-self-register.ts";
 
 const { CHROME_BIN, FIREFOX_BIN, SAFARI_BIN } = process.env;
 
+const pack = {
+	plugins: [
+		unpluginStencil.rolldown({
+			docs: true,
+			types: true,
+		}),
+		noSelfRegister,
+	],
+
+	entry: ["src/**/*.{ts,tsx}", "!src/**/*.test.{ts,tsx}", "!src/**/*.d.ts"],
+	root: "src",
+	unbundle: true,
+
+	copy: ["src/components.d.ts"],
+
+	fixedExtension: false,
+	sourcemap: true,
+};
+
 const config: ReturnType<typeof defineConfig> = defineConfig({
+	define: { __DEV__: "true" },
+
 	resolve: {
 		tsconfigPaths: true,
 	},
@@ -72,24 +93,21 @@ const config: ReturnType<typeof defineConfig> = defineConfig({
 		},
 	},
 
-	pack: {
-		plugins: [
-			unpluginStencil.rolldown({
-				docs: true,
-				types: true,
-			}),
-			noSelfRegister,
-		],
-
-		entry: ["src/**/*.{ts,tsx}", "!src/**/*.test.{ts,tsx}", "!src/**/*.d.ts"],
-		root: "src",
-		unbundle: true,
-
-		copy: ["src/components.d.ts"],
-
-		fixedExtension: false,
-		sourcemap: true,
-	},
+	pack: [
+		{
+			...pack,
+			entry: [...pack.entry, "!src/utils/dev.ts"],
+			define: { __DEV__: "false" },
+		},
+		{
+			...pack,
+			define: { __DEV__: "true" },
+			outDir: "dist/dev",
+			clean: false,
+			copy: [],
+			dts: false,
+		},
+	],
 });
 
 export default config;
