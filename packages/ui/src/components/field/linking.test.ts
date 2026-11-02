@@ -92,3 +92,35 @@ it.runIf(server.browser === "chrome")(
 		);
 	},
 );
+
+it("manualaria leaves the control's ARIA alone", async () => {
+	document.body.innerHTML = `
+		<base-field manualaria>
+			<label>Email <input type="email" aria-describedby="own"></label>
+			<p id="own">Own</p>
+			<base-field-errors></base-field-errors>
+		</base-field>
+	`;
+	const input = document.querySelector("input");
+	if (!input) throw new Error("not mounted");
+	await customElements.whenDefined("base-field");
+
+	input.value = "nope";
+	input.checkValidity();
+
+	expect(input.getAttribute("aria-describedby")).toBe("own");
+	expect(input.hasAttribute("aria-invalid")).toBe(false);
+});
+
+it.runIf(server.browser === "chrome")(
+	"aria-live on the errors element turns the live region off",
+	async () => {
+		const { errors } = await mount();
+
+		errors.setAttribute("aria-live", "off");
+
+		expect(await commands.computedProperty("base-field-errors", "live")).toBe(
+			"undefined",
+		);
+	},
+);

@@ -31,6 +31,12 @@ export class Field {
 	@Prop({ attribute: "validateon" }) validateOn: "input" | "blur" | "submit" =
 		"input";
 
+	/** Milliseconds to wait after typing before `validate` runs, for `validateOn="input"`. */
+	@Prop({ attribute: "validatedelay" }) validateDelay = 0;
+
+	/** The consumer wires ARIA on the control: field writes none. */
+	@Prop({ attribute: "manualaria" }) manualAria = false;
+
 	#abort?: AbortController;
 
 	/** `dirty` compares against the value the control had when the field first saw it. */
@@ -55,7 +61,27 @@ export class Field {
 
 	#key?: string;
 
+	/** The custom message field last wrote, to tell it from a consumer's or form's. */
+	#written = "";
+
 	#removeSubmitCheck?: () => void;
+
+	/**
+	 * Leaves a custom message field did not write: it is a consumer's or form's until they clear it.
+	 *
+	 * @param control the control to write on
+	 * @param message the custom validity message
+	 */
+	#write(control: Control, message: string): void {
+		if (
+			control.validity.customError &&
+			control.validationMessage !== this.#written
+		) {
+			return;
+		}
+		control.setCustomValidity(message);
+		this.#written = message;
+	}
 
 	#notify(): void {
 		this.host.dispatchEvent(new Event("base-field-validity"));
@@ -69,15 +95,22 @@ export class Field {
 		this.#checked = control.value;
 		this.#key = undefined;
 		setState(this.internals, VALIDATING, true);
-		control.setCustomValidity(VALIDATING);
+		this.#write(control, VALIDATING);
 		this.#notify();
+
+		if (this.validateOn === "input" && this.validateDelay > 0) {
+			await new Promise((resolve) => {
+				setTimeout(resolve, this.validateDelay);
+			});
+			if (run.signal.aborted) return false;
+		}
 
 		let key: string | undefined;
 		try {
 			const result = await this.validate(control.value, {
 				signal: run.signal,
 			});
-			key = result ?? undefined;
+			if (result) key = result;
 		} catch (error) {
 			if (run.signal.aborted) return false;
 			this.#settle(control);
@@ -101,7 +134,7 @@ export class Field {
 		this.#run = undefined;
 		this.#key = key;
 		setState(this.internals, VALIDATING, false);
-		control.setCustomValidity(key ?? "");
+		this.#write(control, key ?? "");
 		this.#notify();
 	}
 
@@ -114,7 +147,8 @@ export class Field {
 					this.#run = undefined;
 					setState(this.internals, VALIDATING, false);
 				}
-				control.setCustomValidity(
+				this.#write(
+					control,
 					control.value === this.#checked ? (this.#key ?? "") : "",
 				);
 				this.#notify();
@@ -133,11 +167,13 @@ export class Field {
 	#link(control: Control): void {
 		if (control === this.#linked) return;
 		this.#linked = control;
-		const parts = [
-			this.host.querySelector("base-field-description"),
-			this.host.querySelector("base-field-errors"),
-		].filter((part) => part !== null);
-		if (parts.length > 0) control.ariaDescribedByElements = parts;
+		if (!this.manualAria) {
+			const parts = [
+				this.host.querySelector("base-field-description"),
+				this.host.querySelector("base-field-errors"),
+			].filter((part) => part !== null);
+			if (parts.length > 0) control.ariaDescribedByElements = parts;
+		}
 
 		this.#removeSubmitCheck?.();
 		this.#removeSubmitCheck = control.form
@@ -181,6 +217,7 @@ export class Field {
 		);
 		setState(this.internals, "filled", control.value !== "");
 
+		if (this.manualAria) return;
 		if (this.#reported || control.matches(":user-invalid")) {
 			control.ariaInvalid = "true";
 		} else {
@@ -207,7 +244,8 @@ export class Field {
 		if (this.#run) {
 			this.#run.abort();
 			this.#run = undefined;
-			getControl(this.host)?.setCustomValidity("");
+			const control = getControl(this.host);
+			if (control) this.#write(control, "");
 		}
 	}
 

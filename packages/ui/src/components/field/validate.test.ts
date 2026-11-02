@@ -290,3 +290,96 @@ it("submit mode skips the check for formnovalidate", async () => {
 	await expect.poll(() => submissions.length).toBe(1);
 	expect(runs).toHaveLength(0);
 });
+
+it("a valid result leaves a consumer's failing key in place", async () => {
+	const { inputs, runs } = await mount();
+	const input = at(inputs, 0);
+	await userEvent.type(input, "a");
+
+	input.setCustomValidity("reserved");
+	runs[0]?.resolve();
+
+	await new Promise((resolve) => {
+		setTimeout(resolve, 50);
+	});
+	expect(input.validationMessage).toBe("reserved");
+});
+
+it("field's result goes in once the consumer clears its key", async () => {
+	const { inputs, runs } = await mount();
+	const input = at(inputs, 0);
+	input.addEventListener("input", () => {
+		input.setCustomValidity(input.value === "a" ? "reserved" : "");
+	});
+
+	await userEvent.type(input, "a");
+	expect(input.validationMessage).toBe("reserved");
+
+	await userEvent.type(input, "b");
+	expect(input.validationMessage).toBe("validating");
+
+	at(runs, 1).resolve("taken");
+	await expect.poll(() => input.validationMessage).toBe("taken");
+});
+
+it("an empty string from validate means valid", async () => {
+	const { inputs, runs } = await mount();
+	const input = at(inputs, 0);
+	await userEvent.type(input, "a");
+
+	runs[0]?.resolve("");
+
+	await expect.poll(() => input.validity.valid).toBe(true);
+});
+
+it("an aborted run's rejection is dropped without a report", async () => {
+	const { fields, inputs } = await mount();
+	const errors: unknown[] = [];
+	const onError = (event: ErrorEvent): void => {
+		event.preventDefault();
+		errors.push(event.error);
+	};
+	globalThis.addEventListener("error", onError);
+	at(fields, 0).validate = (_value, { signal }) =>
+		new Promise((_resolve, reject) => {
+			signal.addEventListener("abort", () => {
+				reject(signal.reason as Error);
+			});
+		});
+
+	await userEvent.type(at(inputs, 0), "ab");
+	await new Promise((resolve) => {
+		setTimeout(resolve, 50);
+	});
+	globalThis.removeEventListener("error", onError);
+
+	expect(errors).toEqual([]);
+});
+
+it("a failing validate is reported and leaves the control valid", async () => {
+	const { fields, inputs } = await mount();
+	const failure = new Error("network");
+	const errors: unknown[] = [];
+	const onError = (event: ErrorEvent): void => {
+		event.preventDefault();
+		errors.push(event.error);
+	};
+	globalThis.addEventListener("error", onError);
+	at(fields, 0).validate = () => Promise.reject(failure);
+
+	await userEvent.type(at(inputs, 0), "a");
+	await expect.poll(() => errors).toEqual([failure]);
+	globalThis.removeEventListener("error", onError);
+
+	expect(at(inputs, 0).validity.valid).toBe(true);
+});
+
+it("validatedelay runs only the last value, holding validating meanwhile", async () => {
+	const { inputs, runs } = await mount(`validatedelay="50"`);
+	const input = at(inputs, 0);
+
+	await userEvent.type(input, "ab");
+	expect(input.validationMessage).toBe("validating");
+
+	await expect.poll(() => runs.map(({ value }) => value)).toEqual(["ab"]);
+});

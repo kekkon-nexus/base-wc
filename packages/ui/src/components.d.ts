@@ -7,12 +7,22 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/runtime";
 export namespace Components {
     interface BaseField {
         /**
+          * The consumer wires ARIA on the control: field writes none.
+          * @default false
+         */
+        "manualAria": boolean;
+        /**
           * Returns the key the value fails, or `null`. Pass `signal` on to `fetch`.
          */
         "validate"?: (
 		value: string,
 		options: { signal: AbortSignal },
 	) => string | null | undefined | Promise<string | null | undefined>;
+        /**
+          * Milliseconds to wait after typing before `validate` runs, for `validateOn="input"`.
+          * @default 0
+         */
+        "validateDelay": number;
         /**
           * When `validate` runs.
           * @default "input"
@@ -56,12 +66,22 @@ declare global {
 declare namespace LocalJSX {
     interface BaseField {
         /**
+          * The consumer wires ARIA on the control: field writes none.
+          * @default false
+         */
+        "manualAria"?: boolean;
+        /**
           * Returns the key the value fails, or `null`. Pass `signal` on to `fetch`.
          */
         "validate"?: (
 		value: string,
 		options: { signal: AbortSignal },
 	) => string | null | undefined | Promise<string | null | undefined>;
+        /**
+          * Milliseconds to wait after typing before `validate` runs, for `validateOn="input"`.
+          * @default 0
+         */
+        "validateDelay"?: number;
         /**
           * When `validate` runs.
           * @default "input"
@@ -79,6 +99,8 @@ declare namespace LocalJSX {
 
     interface BaseFieldAttributes {
         "validateOn": "input" | "blur" | "submit";
+        "validateDelay": number;
+        "manualAria": boolean;
     }
     interface BaseFieldErrorAttributes {
         "match": string;
