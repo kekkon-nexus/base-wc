@@ -17,6 +17,9 @@ export class FieldError {
 
 	#abort?: AbortController;
 
+	/** Set by any `invalid` event, which also covers a `checkValidity()` that `:user-invalid` ignores. */
+	#reported = false;
+
 	#matches(field: Element, keys: Set<string>): boolean {
 		if (this.match) return keys.has(this.match);
 		return ![...field.querySelectorAll("base-field-error")].some(
@@ -24,12 +27,15 @@ export class FieldError {
 		);
 	}
 
-	#update = (): void => {
+	#update = (event?: Event): void => {
 		const field = this.host.closest("base-field");
 		const control = getControl(field);
+		if (event?.type === "invalid") this.#reported = true;
+		if (control?.validity.valid) this.#reported = false;
 		const shown =
 			field !== null &&
-			control?.matches(":user-invalid") === true &&
+			control !== undefined &&
+			(this.#reported || control.matches(":user-invalid")) &&
 			this.#matches(field, failingKeys(control));
 		this.host.hidden = !shown;
 		setState(this.internals, "shown", shown);

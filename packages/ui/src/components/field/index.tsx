@@ -6,6 +6,7 @@ import {
 	getControl,
 	setState,
 } from "@/components/field/control";
+import { focusFirstInvalid } from "@/utils/invalid-focus";
 
 @Component({
 	tag: "base-field",
@@ -25,6 +26,11 @@ export class Field {
 		const control = getControl(this.host);
 		if (!control) return;
 		if (!this.#initial.has(control)) this.#initial.set(control, control.value);
+
+		if (event?.type === "invalid") {
+			event.preventDefault();
+			focusFirstInvalid(control, this.host);
+		}
 
 		if (event?.type === "focusout" && event.target === control) {
 			setState(this.internals, "touched", true);
