@@ -16,7 +16,8 @@ async function mount(control: string): Promise<{
 				<div id="errors">
 					<base-field-error match="valueMissing">Required</base-field-error>
 					<base-field-error match="typeMismatch">Not an email</base-field-error>
-					<base-field-error match="customError">Taken</base-field-error>
+					<base-field-error match="taken">Taken</base-field-error>
+					<base-field-error>Check this field</base-field-error>
 				</div>
 			</base-field>
 			<button>Submit</button>
@@ -109,13 +110,54 @@ it("aria-invalid follows user-invalid", async () => {
 it("a custom validity message shows its error", async () => {
 	const { input, errors } = await mount(`<input>`);
 	input.addEventListener("input", () => {
-		input.setCustomValidity(input.value === "admin" ? "Taken" : "");
+		input.setCustomValidity(input.value === "admin" ? "taken" : "");
 	});
 
 	await userEvent.type(input, "admin");
 	await userEvent.tab();
 
-	expect(shown(errors)).toEqual(["customError"]);
+	expect(shown(errors)).toEqual(["taken"]);
+});
+
+it("a custom key clears as soon as the consumer's rule clears it", async () => {
+	const { input, errors } = await mount(`<input>`);
+	input.addEventListener("input", () => {
+		input.setCustomValidity(input.value === "admin" ? "taken" : "");
+	});
+
+	await userEvent.type(input, "admin");
+	await userEvent.tab();
+	await userEvent.type(input, "s");
+
+	expect(shown(errors)).toEqual([]);
+});
+
+it("the catch-all shows when no error with match is showing", async () => {
+	const { input, errors } = await mount(`<input pattern="a+">`);
+
+	await userEvent.type(input, "b");
+	await userEvent.tab();
+
+	expect(shown(errors)).toEqual([""]);
+});
+
+it("a custom message that is not a key falls to the catch-all", async () => {
+	const { input, errors } = await mount(`<input>`);
+	input.setCustomValidity("Some sentence");
+
+	await userEvent.type(input, "a");
+	await userEvent.tab();
+
+	expect(shown(errors)).toEqual([""]);
+});
+
+it("the catch-all stays hidden while an error with match shows", async () => {
+	const { input, errors } = await mount(`<input type="email">`);
+
+	await userEvent.type(input, "nope");
+	await userEvent.tab();
+
+	expect(shown(errors)).toEqual(["typeMismatch"]);
 });
 
 it.runIf(server.browser === "chrome")(

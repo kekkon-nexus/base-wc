@@ -47,7 +47,7 @@ export class Field {
 		this.#abort = new AbortController();
 		for (const type of EVENTS) {
 			this.host.addEventListener(type, this.#update, {
-				capture: true,
+				capture: type === "invalid",
 				signal: this.#abort.signal,
 			});
 		}

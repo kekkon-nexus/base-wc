@@ -5,7 +5,10 @@ export type Control =
 
 const CONTROL = "input, select, textarea";
 
-/** `invalid` does not bubble, so these are listened for in the capture phase. */
+/**
+ * `invalid` does not bubble, so it is listened for in the capture phase. The rest bubble,
+ * which puts field after a consumer's listener on the control, so a `setCustomValidity()` there is seen.
+ */
 export const EVENTS: string[] = ["input", "change", "focusout", "invalid"];
 
 export function getControl(field: Element | null): Control | undefined {

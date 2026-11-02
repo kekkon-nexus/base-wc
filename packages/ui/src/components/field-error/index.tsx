@@ -1,6 +1,7 @@
 import { AttachInternals, Component, Element, Prop } from "@stencil/core";
 
 import { EVENTS, getControl, setState } from "@/components/field/control";
+import { failingKeys } from "@/utils/validity";
 
 @Component({
 	tag: "base-field-error",
@@ -11,16 +12,25 @@ export class FieldError {
 
 	@AttachInternals({ formAssociated: false }) internals!: ElementInternals;
 
-	/** The validity key this message is for. Without it, the message shows for any invalid value. */
-	@Prop() match?: Exclude<keyof ValidityState, "valid">;
+	/** The key this message is for: a native `validity` key or a custom key. Without it, this is the catch-all. */
+	@Prop() match?: string;
 
 	#abort?: AbortController;
 
+	#matches(field: Element, keys: Set<string>): boolean {
+		if (this.match) return keys.has(this.match);
+		return ![...field.querySelectorAll("base-field-error")].some(
+			({ match }) => match !== undefined && keys.has(match),
+		);
+	}
+
 	#update = (): void => {
-		const control = getControl(this.host.closest("base-field"));
+		const field = this.host.closest("base-field");
+		const control = getControl(field);
 		const shown =
+			field !== null &&
 			control?.matches(":user-invalid") === true &&
-			(!this.match || control.validity[this.match]);
+			this.#matches(field, failingKeys(control));
 		this.host.hidden = !shown;
 		setState(this.internals, "shown", shown);
 	};
@@ -32,7 +42,7 @@ export class FieldError {
 		this.#abort = new AbortController();
 		for (const type of EVENTS) {
 			field.addEventListener(type, this.#update, {
-				capture: true,
+				capture: type === "invalid",
 				signal: this.#abort.signal,
 			});
 		}
