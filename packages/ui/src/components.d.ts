@@ -5,9 +5,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/runtime";
 export namespace Components {
-    interface KnuiField {
+    interface BaseField {
     }
-    interface KnuiFieldError {
+    interface BaseFieldError {
         /**
           * The validity key this message is for. Without it, the message shows for any invalid value.
          */
@@ -15,48 +15,48 @@ export namespace Components {
     }
 }
 declare global {
-    interface HTMLKnuiFieldElement extends Components.KnuiField, HTMLStencilElement {
+    interface HTMLBaseFieldElement extends Components.BaseField, HTMLStencilElement {
     }
-    var HTMLKnuiFieldElement: {
-        prototype: HTMLKnuiFieldElement;
-        new (): HTMLKnuiFieldElement;
+    var HTMLBaseFieldElement: {
+        prototype: HTMLBaseFieldElement;
+        new (): HTMLBaseFieldElement;
     };
-    interface HTMLKnuiFieldErrorElement extends Components.KnuiFieldError, HTMLStencilElement {
+    interface HTMLBaseFieldErrorElement extends Components.BaseFieldError, HTMLStencilElement {
     }
-    var HTMLKnuiFieldErrorElement: {
-        prototype: HTMLKnuiFieldErrorElement;
-        new (): HTMLKnuiFieldErrorElement;
+    var HTMLBaseFieldErrorElement: {
+        prototype: HTMLBaseFieldErrorElement;
+        new (): HTMLBaseFieldErrorElement;
     };
     interface HTMLElementTagNameMap {
-        "knui-field": HTMLKnuiFieldElement;
-        "knui-field-error": HTMLKnuiFieldErrorElement;
+        "base-field": HTMLBaseFieldElement;
+        "base-field-error": HTMLBaseFieldErrorElement;
     }
 }
 declare namespace LocalJSX {
-    interface KnuiField {
+    interface BaseField {
     }
-    interface KnuiFieldError {
+    interface BaseFieldError {
         /**
           * The validity key this message is for. Without it, the message shows for any invalid value.
          */
         "match"?: Exclude<keyof ValidityState, "valid">;
     }
 
-    interface KnuiFieldErrorAttributes {
+    interface BaseFieldErrorAttributes {
         "match": string;
     }
 
     interface IntrinsicElements {
-        "knui-field": KnuiField;
-        "knui-field-error": Omit<KnuiFieldError, keyof KnuiFieldErrorAttributes> & { [K in keyof KnuiFieldError & keyof KnuiFieldErrorAttributes]?: KnuiFieldError[K] } & { [K in keyof KnuiFieldError & keyof KnuiFieldErrorAttributes as `attr:${K}`]?: KnuiFieldErrorAttributes[K] } & { [K in keyof KnuiFieldError & keyof KnuiFieldErrorAttributes as `prop:${K}`]?: KnuiFieldError[K] };
+        "base-field": BaseField;
+        "base-field-error": Omit<BaseFieldError, keyof BaseFieldErrorAttributes> & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes]?: BaseFieldError[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `attr:${K}`]?: BaseFieldErrorAttributes[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `prop:${K}`]?: BaseFieldError[K] };
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "knui-field": LocalJSX.IntrinsicElements["knui-field"] & JSXBase.HTMLAttributes<HTMLKnuiFieldElement>;
-            "knui-field-error": LocalJSX.IntrinsicElements["knui-field-error"] & JSXBase.HTMLAttributes<HTMLKnuiFieldErrorElement>;
+            "base-field": LocalJSX.IntrinsicElements["base-field"] & JSXBase.HTMLAttributes<HTMLBaseFieldElement>;
+            "base-field-error": LocalJSX.IntrinsicElements["base-field-error"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorElement>;
         }
     }
 }

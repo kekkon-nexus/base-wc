@@ -8,7 +8,7 @@ import {
 } from "@/components/field/control";
 
 @Component({
-	tag: "knui-field",
+	tag: "base-field",
 	encapsulation: { type: "none" },
 })
 export class Field {

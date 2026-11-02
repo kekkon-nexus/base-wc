@@ -3,7 +3,7 @@ import { AttachInternals, Component, Element, Prop } from "@stencil/core";
 import { EVENTS, getControl, setState } from "@/components/field/control";
 
 @Component({
-	tag: "knui-field-error",
+	tag: "base-field-error",
 	encapsulation: { type: "none" },
 })
 export class FieldError {
@@ -17,7 +17,7 @@ export class FieldError {
 	#abort?: AbortController;
 
 	#update = (): void => {
-		const control = getControl(this.host.closest("knui-field"));
+		const control = getControl(this.host.closest("base-field"));
 		const shown =
 			control?.matches(":user-invalid") === true &&
 			(!this.match || control.validity[this.match]);
@@ -27,7 +27,7 @@ export class FieldError {
 
 	connectedCallback(): void {
 		this.#update();
-		const field = this.host.closest("knui-field");
+		const field = this.host.closest("base-field");
 		if (!field) return;
 		this.#abort = new AbortController();
 		for (const type of EVENTS) {

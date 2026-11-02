@@ -35,4 +35,4 @@ jobs:
           subject-path: "*"
 
       - run: npm install -g npm@latest
-      - run: npm publish kekkon-nexus-ui-*.tgz
+      - run: npm publish base-wc-core-*.tgz

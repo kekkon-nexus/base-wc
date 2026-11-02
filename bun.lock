@@ -16,7 +16,7 @@
       },
     },
     "packages/ui": {
-      "name": "@kekkon-nexus/ui",
+      "name": "@base-wc/core",
       "version": "0.0.0",
       "dependencies": {
         "@stencil/core": "catalog:stencil",
@@ -64,6 +64,8 @@
     "@babel/helper-validator-identifier": ["@babel/helper-validator-identifier@7.29.7", "", {}, "sha512-qehxGkRj55h/ff8EMaJ+cYhyaKlHIxqYDn682wQD7RNp9UujOQsHog2uS0r2vzr4pW+sXf90NeeayjcNaX3fFg=="],
 
     "@babel/runtime": ["@babel/runtime@7.29.10", "", {}, "sha512-NpugTzbKgGrNe45Ui32cN8vCFFMxVtP/9rtfwv0nP5FRDAjvYBxJcLVpYA9mr1jxP6cnIT7x9LUzuDTbWYYNRA=="],
+
+    "@base-wc/core": ["@base-wc/core@workspace:packages/ui"],
 
     "@blazediff/core": ["@blazediff/core@1.10.0", "", {}, "sha512-AOQff0zgR7cGsZL+4E7hVkmujoPUpm0J9xzWGWZj5wCjd3gmxESXAPfKyuzs93VdpQNFhHlBhfOjrcZ+XTERtQ=="],
 
@@ -134,8 +136,6 @@
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
 
     "@kekkon-nexus/config": ["@kekkon-nexus/config@4.0.0", "", { "dependencies": { "@commitlint/config-conventional": "^21.2.3", "@commitlint/format": "^21.2.3", "commitlint-config-gitmoji": "^2.3.1" }, "peerDependencies": { "@commitlint/cli": "^21.2.3", "oxfmt": ">=0.73.0 <1", "oxlint": "^1.88.0", "oxlint-tsgolint": "^7.0.2004", "typescript": "^7.0.2", "vite-plus": "^1.2.0" }, "optionalPeers": ["@commitlint/cli", "oxfmt", "oxlint", "oxlint-tsgolint", "vite-plus"] }, "sha512-zE9GtOYihP9odi+7EuQ0/u2ESHwLgXcWtEtGXlkrYDk5PzPjoJCJgkD0Z62GrA1HpfRq/bv+O2voTQz6UtfSrw=="],
-
-    "@kekkon-nexus/ui": ["@kekkon-nexus/ui@workspace:packages/ui"],
 
     "@oxc-project/runtime": ["@oxc-project/runtime@0.154.0", "", {}, "sha512-cBQNGoh659BNgvA8OC/e4BNDtFkv03dJaYdkp2adgOQNtISNAPQ+nB4S8XvWtNk7Xl+0g+7aa+iRGR25Xycd1Q=="],
 

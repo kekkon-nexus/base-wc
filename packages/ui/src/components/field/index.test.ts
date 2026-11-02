@@ -11,28 +11,28 @@ async function mount(control: string): Promise<{
 }> {
 	document.body.innerHTML = `
 		<form>
-			<knui-field>
+			<base-field>
 				<label>Email ${control}</label>
 				<div id="errors">
-					<knui-field-error match="valueMissing">Required</knui-field-error>
-					<knui-field-error match="typeMismatch">Not an email</knui-field-error>
-					<knui-field-error match="customError">Taken</knui-field-error>
+					<base-field-error match="valueMissing">Required</base-field-error>
+					<base-field-error match="typeMismatch">Not an email</base-field-error>
+					<base-field-error match="customError">Taken</base-field-error>
 				</div>
-			</knui-field>
+			</base-field>
 			<button>Submit</button>
 		</form>
 	`;
-	const field = document.querySelector<HTMLElement>("knui-field");
+	const field = document.querySelector<HTMLElement>("base-field");
 	const input = document.querySelector("input");
 	const form = document.querySelector("form");
 	if (!field || !input || !form) throw new Error("not mounted");
 	const errors = Object.fromEntries(
-		[...document.querySelectorAll<HTMLElement>("knui-field-error")].map(
+		[...document.querySelectorAll<HTMLElement>("base-field-error")].map(
 			(error) => [error.getAttribute("match") ?? "", error],
 		),
 	);
-	await customElements.whenDefined("knui-field");
-	await customElements.whenDefined("knui-field-error");
+	await customElements.whenDefined("base-field");
+	await customElements.whenDefined("base-field-error");
 	return { field, input, form, errors };
 }
 
