@@ -6,6 +6,18 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/runtime";
 export namespace Components {
     interface BaseField {
+        /**
+          * Returns the key the value fails, or `null`. Pass `signal` on to `fetch`.
+         */
+        "validate"?: (
+		value: string,
+		options: { signal: AbortSignal },
+	) => string | null | undefined | Promise<string | null | undefined>;
+        /**
+          * When `validate` runs.
+          * @default "input"
+         */
+        "validateOn": "input" | "blur" | "submit";
     }
     interface BaseFieldError {
         /**
@@ -43,6 +55,18 @@ declare global {
 }
 declare namespace LocalJSX {
     interface BaseField {
+        /**
+          * Returns the key the value fails, or `null`. Pass `signal` on to `fetch`.
+         */
+        "validate"?: (
+		value: string,
+		options: { signal: AbortSignal },
+	) => string | null | undefined | Promise<string | null | undefined>;
+        /**
+          * When `validate` runs.
+          * @default "input"
+         */
+        "validateOn"?: "input" | "blur" | "submit";
     }
     interface BaseFieldError {
         /**
@@ -53,12 +77,15 @@ declare namespace LocalJSX {
     interface BaseFieldErrors {
     }
 
+    interface BaseFieldAttributes {
+        "validateOn": "input" | "blur" | "submit";
+    }
     interface BaseFieldErrorAttributes {
         "match": string;
     }
 
     interface IntrinsicElements {
-        "base-field": BaseField;
+        "base-field": Omit<BaseField, keyof BaseFieldAttributes> & { [K in keyof BaseField & keyof BaseFieldAttributes]?: BaseField[K] } & { [K in keyof BaseField & keyof BaseFieldAttributes as `attr:${K}`]?: BaseFieldAttributes[K] } & { [K in keyof BaseField & keyof BaseFieldAttributes as `prop:${K}`]?: BaseField[K] };
         "base-field-error": Omit<BaseFieldError, keyof BaseFieldErrorAttributes> & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes]?: BaseFieldError[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `attr:${K}`]?: BaseFieldErrorAttributes[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `prop:${K}`]?: BaseFieldError[K] };
         "base-field-errors": BaseFieldErrors;
     }

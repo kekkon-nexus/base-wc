@@ -2,7 +2,7 @@ import type { Control } from "@/components/field/control";
 
 const round = new WeakSet<Element>();
 
-function mayFocus(scope: Element): boolean {
+export function mayFocus(scope: Element): boolean {
 	const active = document.activeElement;
 	return (
 		active === null ||

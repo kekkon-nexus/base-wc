@@ -1,4 +1,4 @@
-import { AttachInternals, Component, Element } from "@stencil/core";
+import { AttachInternals, Component, Element, Prop } from "@stencil/core";
 
 import {
 	type Control,
@@ -6,7 +6,11 @@ import {
 	getControl,
 	setState,
 } from "@/components/field/control";
-import { focusFirstInvalid } from "@/utils/invalid-focus";
+import { requestSubmit } from "@/utils/form";
+import { focusFirstInvalid, mayFocus } from "@/utils/invalid-focus";
+import { addSubmitCheck } from "@/utils/submit-checks";
+
+const VALIDATING = "validating";
 
 @Component({
 	tag: "base-field",
@@ -16,6 +20,16 @@ export class Field {
 	@Element() host!: HTMLElement;
 
 	@AttachInternals({ formAssociated: false }) internals!: ElementInternals;
+
+	/** Returns the key the value fails, or `null`. Pass `signal` on to `fetch`. */
+	@Prop() validate?: (
+		value: string,
+		options: { signal: AbortSignal },
+	) => string | null | undefined | Promise<string | null | undefined>;
+
+	/** When `validate` runs. */
+	@Prop({ attribute: "validateon" }) validateOn: "input" | "blur" | "submit" =
+		"input";
 
 	#abort?: AbortController;
 
@@ -31,6 +45,116 @@ export class Field {
 	/** Set by any `invalid` event, which also covers a `checkValidity()` that `:user-invalid` ignores. */
 	#reported = false;
 
+	#run?: AbortController;
+
+	/** A submit was blocked by this field's `validating`. */
+	#attempted = false;
+
+	/** The value of the latest run, and the key it resolved to. */
+	#checked?: string;
+
+	#key?: string;
+
+	#removeSubmitCheck?: () => void;
+
+	#notify(): void {
+		this.host.dispatchEvent(new Event("base-field-validity"));
+	}
+
+	async #check(control: Control): Promise<boolean> {
+		if (!this.validate) return true;
+		this.#run?.abort();
+		const run = new AbortController();
+		this.#run = run;
+		this.#checked = control.value;
+		this.#key = undefined;
+		setState(this.internals, VALIDATING, true);
+		control.setCustomValidity(VALIDATING);
+		this.#notify();
+
+		let key: string | undefined;
+		try {
+			const result = await this.validate(control.value, {
+				signal: run.signal,
+			});
+			key = result ?? undefined;
+		} catch (error) {
+			if (run.signal.aborted) return false;
+			this.#settle(control);
+			throw error;
+		}
+		if (run.signal.aborted) return false;
+
+		this.#settle(control, key);
+		const attempted = this.#attempted;
+		this.#attempted = false;
+		if (key !== undefined) {
+			if (attempted) control.checkValidity();
+			return false;
+		}
+		const { form } = control;
+		if (attempted && form && mayFocus(form)) requestSubmit(form);
+		return true;
+	}
+
+	#settle(control: Control, key?: string): void {
+		this.#run = undefined;
+		this.#key = key;
+		setState(this.internals, VALIDATING, false);
+		control.setCustomValidity(key ?? "");
+		this.#notify();
+	}
+
+	#trigger(control: Control, type: string): void {
+		if (!this.validate) return;
+		if (this.validateOn === "submit") {
+			if (type === "input") {
+				this.#run?.abort();
+				if (this.#run) {
+					this.#run = undefined;
+					setState(this.internals, VALIDATING, false);
+				}
+				control.setCustomValidity(
+					control.value === this.#checked ? (this.#key ?? "") : "",
+				);
+				this.#notify();
+			}
+			return;
+		}
+		const fires =
+			this.validateOn === "input"
+				? type === "input"
+				: type === "change" || type === "focusout";
+		if (fires && control.value !== this.#checked) {
+			this.#check(control).catch(reportError);
+		}
+	}
+
+	#link(control: Control): void {
+		if (control === this.#linked) return;
+		this.#linked = control;
+		const parts = [
+			this.host.querySelector("base-field-description"),
+			this.host.querySelector("base-field-errors"),
+		].filter((part) => part !== null);
+		if (parts.length > 0) control.ariaDescribedByElements = parts;
+
+		this.#removeSubmitCheck?.();
+		this.#removeSubmitCheck = control.form
+			? addSubmitCheck(control.form, {
+					stale: () =>
+						this.validateOn === "submit" &&
+						this.validate !== undefined &&
+						control.value !== this.#checked,
+					check: async () => {
+						const passed = await this.#check(control);
+						if (!passed && this.#key !== undefined) control.checkValidity();
+						return passed;
+					},
+				})
+			: undefined;
+	}
+
 	#update = (event?: Event): void => {
 		const control = getControl(this.host);
 		if (!control) return;
@@ -41,8 +165,10 @@ export class Field {
 		if (event?.type === "invalid") {
 			event.preventDefault();
 			this.#reported = true;
+			if (control.validationMessage === VALIDATING) this.#attempted = true;
 			focusFirstInvalid(control, this.host);
 		}
+		if (event) this.#trigger(control, event.type);
 		if (control.validity.valid) this.#reported = false;
 
 		if (event?.type === "focusout" && event.target === control) {
@@ -62,17 +188,6 @@ export class Field {
 		}
 	};
 
-	/** @param control the control to describe, set once per control so a framework's replacement is linked too */
-	#link(control: Control): void {
-		if (control === this.#linked) return;
-		this.#linked = control;
-		const parts = [
-			this.host.querySelector("base-field-description"),
-			this.host.querySelector("base-field-errors"),
-		].filter((part) => part !== null);
-		if (parts.length > 0) control.ariaDescribedByElements = parts;
-	}
-
 	connectedCallback(): void {
 		this.#abort = new AbortController();
 		this.#observer.observe(this.host, { childList: true, subtree: true });
@@ -87,6 +202,13 @@ export class Field {
 	disconnectedCallback(): void {
 		this.#abort?.abort();
 		this.#observer.disconnect();
+		this.#removeSubmitCheck?.();
+		this.#linked = undefined;
+		if (this.#run) {
+			this.#run.abort();
+			this.#run = undefined;
+			getControl(this.host)?.setCustomValidity("");
+		}
 	}
 
 	componentDidLoad(): void {
