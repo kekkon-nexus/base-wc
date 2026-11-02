@@ -17,18 +17,23 @@ function* documents(node: DomNode): Generator<DomNode> {
 	}
 }
 
+interface AxNode {
+	description?: { value: string };
+	properties?: { name: string; value: { value: unknown } }[];
+}
+
 /**
- * WebDriver has no Get Computed Description, so this asks Chrome DevTools Protocol, Chrome only.
+ * WebDriver reads only role and label from the accessibility tree, so this asks Chrome DevTools Protocol, Chrome only.
  * Tests run inside iframes, so the selector is tried in every frame's document.
  *
  * @param context the command context, holding the WebdriverIO browser
- * @param selector a CSS selector for the described element
- * @returns the element's computed accessible description
+ * @param selector a CSS selector for the element
+ * @returns the element's accessibility node
  */
-export const computedDescription: BrowserCommand<[selector: string]> = async (
-	context,
-	selector,
-) => {
+async function axNode(
+	context: Parameters<BrowserCommand>[0],
+	selector: string,
+): Promise<AxNode | undefined> {
 	const send = <T>(cmd: string, params: object = {}): Promise<T> =>
 		context.browser.sendCommandAndGetResult(cmd, params) as Promise<T>;
 
@@ -42,10 +47,39 @@ export const computedDescription: BrowserCommand<[selector: string]> = async (
 			selector,
 		});
 		if (!nodeId) continue;
-		const { nodes } = await send<{
-			nodes: { description?: { value: string } }[];
-		}>("Accessibility.getPartialAXTree", { nodeId, fetchRelatives: false });
-		return nodes[0]?.description?.value ?? "";
+		const { nodes } = await send<{ nodes: AxNode[] }>(
+			"Accessibility.getPartialAXTree",
+			{ nodeId, fetchRelatives: false },
+		);
+		return nodes[0];
 	}
 	throw new Error(`no element matches ${selector}`);
+}
+
+/**
+ * @param context the command context, holding the WebdriverIO browser
+ * @param selector a CSS selector for the described element
+ * @returns the element's computed accessible description
+ */
+export const computedDescription: BrowserCommand<[selector: string]> = async (
+	context,
+	selector,
+) => {
+	const node = await axNode(context, selector);
+	return node?.description?.value ?? "";
+};
+
+/**
+ * @param context the command context, holding the WebdriverIO browser
+ * @param selector a CSS selector for the element
+ * @returns the element's exposed invalid state, such as `"true"` or `"false"`
+ */
+export const computedInvalid: BrowserCommand<[selector: string]> = async (
+	context,
+	selector,
+) => {
+	const node = await axNode(context, selector);
+	return String(
+		node?.properties?.find(({ name }) => name === "invalid")?.value.value,
+	);
 };
