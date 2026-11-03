@@ -1,6 +1,6 @@
 import { AttachInternals, Component, Element, Prop } from "@stencil/core";
 
-import { EVENTS, getControl, setState } from "@/components/field/control";
+import { EVENTS, getControls, setState } from "@/components/field/control";
 import { warn } from "@/utils/dev";
 import { failingKeys } from "@/utils/validity";
 
@@ -30,15 +30,20 @@ export class FieldError {
 
 	#update = (event?: Event): void => {
 		const field = this.host.closest("base-field");
-		const control = getControl(field);
+		const controls = getControls(field);
 		if (event?.type === "invalid") this.#reported = true;
-		if (control?.validity.valid) this.#reported = false;
+		if (controls.every(({ validity }) => validity.valid))
+			this.#reported = false;
 		if (event?.type === "base-field-reset") this.#reported = false;
+		const keys = new Set(
+			controls.flatMap((control) => [...failingKeys(control)]),
+		);
 		const shown =
 			field !== null &&
-			control !== undefined &&
-			(this.#reported || control.matches(":user-invalid")) &&
-			this.#matches(field, failingKeys(control));
+			controls.length > 0 &&
+			(this.#reported ||
+				controls.some((control) => control.matches(":user-invalid"))) &&
+			this.#matches(field, keys);
 		this.host.hidden = !shown;
 		setState(this.internals, "shown", shown);
 	};

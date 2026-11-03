@@ -4,7 +4,10 @@ import {
 	type Control,
 	EVENTS,
 	getControl,
+	getControls,
+	isFilled,
 	setState,
+	snapshot,
 } from "@/components/field/control";
 import { warn, warnMissingErrors } from "@/utils/dev";
 import { afterReset, requestSubmit } from "@/utils/form";
@@ -41,10 +44,10 @@ export class Field {
 
 	#abort?: AbortController;
 
-	/** `dirty` compares against the value the control had when the field first saw it. */
-	#initial = new WeakMap<Control, string>();
+	/** `dirty` compares against the state the controls had when the field first saw them. */
+	#initial?: string;
 
-	#linked?: Control;
+	#linked: Control[] = [];
 
 	#observer = new MutationObserver(() => {
 		this.#update();
@@ -179,16 +182,32 @@ export class Field {
 		this.host.dispatchEvent(new Event("base-field-reset"));
 	}
 
-	#link(control: Control): void {
-		if (control === this.#linked) return;
-		this.#linked = control;
-		if (__DEV__) warnMissingErrors(this.host, control);
+	/**
+	 * Validation, reset and submit follow the first control; ARIA goes on every control.
+	 *
+	 * @param controls the field's controls, first one first
+	 */
+	#link(controls: Control[]): void {
+		const [control] = controls;
+		if (
+			!control ||
+			(controls.length === this.#linked.length &&
+				controls.every((each, index) => each === this.#linked[index]))
+		) {
+			return;
+		}
+		this.#linked = controls;
+		if (__DEV__) {
+			for (const each of controls) warnMissingErrors(this.host, each);
+		}
 		if (!this.manualAria) {
 			const parts = [
 				this.host.querySelector("base-field-description"),
 				this.host.querySelector("base-field-errors"),
 			].filter((part) => part !== null);
-			if (parts.length > 0) control.ariaDescribedByElements = parts;
+			if (parts.length > 0) {
+				for (const each of controls) each.ariaDescribedByElements = parts;
+			}
 		}
 
 		this.#formAbort?.abort();
@@ -220,17 +239,19 @@ export class Field {
 	}
 
 	#update = (event?: Event): void => {
-		const control = getControl(this.host);
+		const controls = getControls(this.host);
+		const [control] = controls;
 		if (!control) return;
-		if (!this.#initial.has(control)) this.#initial.set(control, control.value);
+		this.#initial ??= snapshot(controls);
 
-		this.#link(control);
+		this.#link(controls);
 
 		if (event?.type === "invalid") {
+			const target = event.target as Control;
 			event.preventDefault();
 			this.#reported = true;
-			if (control.validationMessage === VALIDATING) this.#attempted = true;
-			focusFirstInvalid(control, this.host);
+			if (target.validationMessage === VALIDATING) this.#attempted = true;
+			focusFirstInvalid(target, this.host);
 		}
 		if (event?.type === "base-field-reset") this.#reported = false;
 		if (event) this.#trigger(control, event.type);
@@ -243,23 +264,25 @@ export class Field {
 				warn(`"${message}" is reserved and can't be a custom key.`);
 			}
 		}
-		if (control.validity.valid) this.#reported = false;
+		if (controls.every(({ validity }) => validity.valid)) {
+			this.#reported = false;
+		}
 
-		if (event?.type === "focusout" && event.target === control) {
+		if (
+			event?.type === "focusout" &&
+			controls.includes(event.target as Control)
+		) {
 			setState(this.internals, "touched", true);
 		}
-		setState(
-			this.internals,
-			"dirty",
-			control.value !== this.#initial.get(control),
-		);
-		setState(this.internals, "filled", control.value !== "");
+		setState(this.internals, "dirty", snapshot(controls) !== this.#initial);
+		setState(this.internals, "filled", isFilled(controls));
 
 		if (this.manualAria) return;
-		if (this.#reported || control.matches(":user-invalid")) {
-			control.ariaInvalid = "true";
-		} else {
-			control.removeAttribute("aria-invalid");
+		const invalid =
+			this.#reported || controls.some((each) => each.matches(":user-invalid"));
+		for (const each of controls) {
+			if (invalid) each.ariaInvalid = "true";
+			else each.removeAttribute("aria-invalid");
 		}
 	};
 
@@ -279,7 +302,7 @@ export class Field {
 		this.#observer.disconnect();
 		this.#removeSubmitCheck?.();
 		this.#formAbort?.abort();
-		this.#linked = undefined;
+		this.#linked = [];
 		if (this.#run) {
 			this.#run.abort();
 			this.#run = undefined;
