@@ -106,6 +106,12 @@ it("a click selects and keeps focus in the input", async () => {
 
 	const debt = select.querySelector<HTMLElement>('option[value="debt"]');
 	if (!debt) throw new Error("not mounted");
+	console.log(
+		JSON.stringify({
+			option: debt.getBoundingClientRect(),
+			select: select.getBoundingClientRect(),
+		}),
+	);
 	await userEvent.click(debt);
 
 	expect(select.value).toBe("debt");
