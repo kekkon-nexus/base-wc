@@ -56,6 +56,51 @@ export namespace Components {
 		form?: string;
 	};
     }
+    /**
+     * A stand-in for `<menuitem>`.
+     */
+    interface BaseMenuitem {
+        /**
+          * Stays focusable, as the proposal has it, but does not act.
+          * @default false
+         */
+        "disabled": boolean;
+    }
+    /**
+     * A stand-in for `<menuitemcheckbox>`.
+     */
+    interface BaseMenuitemcheckbox {
+        /**
+          * Live state; `defaultchecked` sets where it starts.
+          * @default false
+         */
+        "checked": boolean;
+        /**
+          * Stays focusable, as the proposal has it, but does not act.
+          * @default false
+         */
+        "disabled": boolean;
+    }
+    /**
+     * A stand-in for `<menuitemradio>`.
+     */
+    interface BaseMenuitemradio {
+        /**
+          * Live state; `defaultchecked` sets where it starts.
+          * @default false
+         */
+        "checked": boolean;
+        /**
+          * Stays focusable, as the proposal has it, but does not act.
+          * @default false
+         */
+        "disabled": boolean;
+    }
+    /**
+     * A stand-in for `<menulist>`.
+     */
+    interface BaseMenulist {
+    }
     interface BaseNumberField {
     }
     interface BaseOtpField {
@@ -125,6 +170,12 @@ export namespace Components {
      */
     interface BaseScrollArea {
     }
+    /**
+     * A stand-in for `<submenu>`: its first item opens the menulist that follows it. The proposal
+     * gives it `display: contents`, which a recipe applies, since no CSS ships.
+     */
+    interface BaseSubmenu {
+    }
     interface BaseTabs {
         /**
           * `automatic` selects a tab when it gets focus; `manual` only on click, Enter or Space.
@@ -186,6 +237,42 @@ declare global {
         prototype: HTMLBaseFormErrorsElement;
         new (): HTMLBaseFormErrorsElement;
     };
+    /**
+     * A stand-in for `<menuitem>`.
+     */
+    interface HTMLBaseMenuitemElement extends Components.BaseMenuitem, HTMLStencilElement {
+    }
+    var HTMLBaseMenuitemElement: {
+        prototype: HTMLBaseMenuitemElement;
+        new (): HTMLBaseMenuitemElement;
+    };
+    /**
+     * A stand-in for `<menuitemcheckbox>`.
+     */
+    interface HTMLBaseMenuitemcheckboxElement extends Components.BaseMenuitemcheckbox, HTMLStencilElement {
+    }
+    var HTMLBaseMenuitemcheckboxElement: {
+        prototype: HTMLBaseMenuitemcheckboxElement;
+        new (): HTMLBaseMenuitemcheckboxElement;
+    };
+    /**
+     * A stand-in for `<menuitemradio>`.
+     */
+    interface HTMLBaseMenuitemradioElement extends Components.BaseMenuitemradio, HTMLStencilElement {
+    }
+    var HTMLBaseMenuitemradioElement: {
+        prototype: HTMLBaseMenuitemradioElement;
+        new (): HTMLBaseMenuitemradioElement;
+    };
+    /**
+     * A stand-in for `<menulist>`.
+     */
+    interface HTMLBaseMenulistElement extends Components.BaseMenulist, HTMLStencilElement {
+    }
+    var HTMLBaseMenulistElement: {
+        prototype: HTMLBaseMenulistElement;
+        new (): HTMLBaseMenulistElement;
+    };
     interface HTMLBaseNumberFieldElement extends Components.BaseNumberField, HTMLStencilElement {
     }
     var HTMLBaseNumberFieldElement: {
@@ -216,6 +303,16 @@ declare global {
         prototype: HTMLBaseScrollAreaElement;
         new (): HTMLBaseScrollAreaElement;
     };
+    /**
+     * A stand-in for `<submenu>`: its first item opens the menulist that follows it. The proposal
+     * gives it `display: contents`, which a recipe applies, since no CSS ships.
+     */
+    interface HTMLBaseSubmenuElement extends Components.BaseSubmenu, HTMLStencilElement {
+    }
+    var HTMLBaseSubmenuElement: {
+        prototype: HTMLBaseSubmenuElement;
+        new (): HTMLBaseSubmenuElement;
+    };
     interface HTMLBaseTabsElement extends Components.BaseTabs, HTMLStencilElement {
     }
     var HTMLBaseTabsElement: {
@@ -239,10 +336,15 @@ declare global {
         "base-field-errors": HTMLBaseFieldErrorsElement;
         "base-form-error": HTMLBaseFormErrorElement;
         "base-form-errors": HTMLBaseFormErrorsElement;
+        "base-menuitem": HTMLBaseMenuitemElement;
+        "base-menuitemcheckbox": HTMLBaseMenuitemcheckboxElement;
+        "base-menuitemradio": HTMLBaseMenuitemradioElement;
+        "base-menulist": HTMLBaseMenulistElement;
         "base-number-field": HTMLBaseNumberFieldElement;
         "base-otp-field": HTMLBaseOtpFieldElement;
         "base-rangegroup": HTMLBaseRangegroupElement;
         "base-scroll-area": HTMLBaseScrollAreaElement;
+        "base-submenu": HTMLBaseSubmenuElement;
         "base-tabs": HTMLBaseTabsElement;
         "base-toolbar": HTMLBaseToolbarElement;
     }
@@ -298,6 +400,51 @@ declare namespace LocalJSX {
 		fields?: Record<string, string>;
 		form?: string;
 	};
+    }
+    /**
+     * A stand-in for `<menuitem>`.
+     */
+    interface BaseMenuitem {
+        /**
+          * Stays focusable, as the proposal has it, but does not act.
+          * @default false
+         */
+        "disabled"?: boolean;
+    }
+    /**
+     * A stand-in for `<menuitemcheckbox>`.
+     */
+    interface BaseMenuitemcheckbox {
+        /**
+          * Live state; `defaultchecked` sets where it starts.
+          * @default false
+         */
+        "checked"?: boolean;
+        /**
+          * Stays focusable, as the proposal has it, but does not act.
+          * @default false
+         */
+        "disabled"?: boolean;
+    }
+    /**
+     * A stand-in for `<menuitemradio>`.
+     */
+    interface BaseMenuitemradio {
+        /**
+          * Live state; `defaultchecked` sets where it starts.
+          * @default false
+         */
+        "checked"?: boolean;
+        /**
+          * Stays focusable, as the proposal has it, but does not act.
+          * @default false
+         */
+        "disabled"?: boolean;
+    }
+    /**
+     * A stand-in for `<menulist>`.
+     */
+    interface BaseMenulist {
     }
     interface BaseNumberField {
     }
@@ -357,6 +504,12 @@ declare namespace LocalJSX {
      */
     interface BaseScrollArea {
     }
+    /**
+     * A stand-in for `<submenu>`: its first item opens the menulist that follows it. The proposal
+     * gives it `display: contents`, which a recipe applies, since no CSS ships.
+     */
+    interface BaseSubmenu {
+    }
     interface BaseTabs {
         /**
           * `automatic` selects a tab when it gets focus; `manual` only on click, Enter or Space.
@@ -386,6 +539,17 @@ declare namespace LocalJSX {
     interface BaseFormErrorAttributes {
         "match": string;
     }
+    interface BaseMenuitemAttributes {
+        "disabled": boolean;
+    }
+    interface BaseMenuitemcheckboxAttributes {
+        "disabled": boolean;
+        "checked": boolean;
+    }
+    interface BaseMenuitemradioAttributes {
+        "disabled": boolean;
+        "checked": boolean;
+    }
     interface BaseOtpFieldAttributes {
         "length": number;
         "autosubmit": boolean;
@@ -409,10 +573,15 @@ declare namespace LocalJSX {
         "base-field-errors": BaseFieldErrors;
         "base-form-error": Omit<BaseFormError, keyof BaseFormErrorAttributes> & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes]?: BaseFormError[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `attr:${K}`]?: BaseFormErrorAttributes[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `prop:${K}`]?: BaseFormError[K] };
         "base-form-errors": BaseFormErrors;
+        "base-menuitem": Omit<BaseMenuitem, keyof BaseMenuitemAttributes> & { [K in keyof BaseMenuitem & keyof BaseMenuitemAttributes]?: BaseMenuitem[K] } & { [K in keyof BaseMenuitem & keyof BaseMenuitemAttributes as `attr:${K}`]?: BaseMenuitemAttributes[K] } & { [K in keyof BaseMenuitem & keyof BaseMenuitemAttributes as `prop:${K}`]?: BaseMenuitem[K] };
+        "base-menuitemcheckbox": Omit<BaseMenuitemcheckbox, keyof BaseMenuitemcheckboxAttributes> & { [K in keyof BaseMenuitemcheckbox & keyof BaseMenuitemcheckboxAttributes]?: BaseMenuitemcheckbox[K] } & { [K in keyof BaseMenuitemcheckbox & keyof BaseMenuitemcheckboxAttributes as `attr:${K}`]?: BaseMenuitemcheckboxAttributes[K] } & { [K in keyof BaseMenuitemcheckbox & keyof BaseMenuitemcheckboxAttributes as `prop:${K}`]?: BaseMenuitemcheckbox[K] };
+        "base-menuitemradio": Omit<BaseMenuitemradio, keyof BaseMenuitemradioAttributes> & { [K in keyof BaseMenuitemradio & keyof BaseMenuitemradioAttributes]?: BaseMenuitemradio[K] } & { [K in keyof BaseMenuitemradio & keyof BaseMenuitemradioAttributes as `attr:${K}`]?: BaseMenuitemradioAttributes[K] } & { [K in keyof BaseMenuitemradio & keyof BaseMenuitemradioAttributes as `prop:${K}`]?: BaseMenuitemradio[K] };
+        "base-menulist": BaseMenulist;
         "base-number-field": BaseNumberField;
         "base-otp-field": Omit<BaseOtpField, keyof BaseOtpFieldAttributes> & { [K in keyof BaseOtpField & keyof BaseOtpFieldAttributes]?: BaseOtpField[K] } & { [K in keyof BaseOtpField & keyof BaseOtpFieldAttributes as `attr:${K}`]?: BaseOtpFieldAttributes[K] } & { [K in keyof BaseOtpField & keyof BaseOtpFieldAttributes as `prop:${K}`]?: BaseOtpField[K] };
         "base-rangegroup": Omit<BaseRangegroup, keyof BaseRangegroupAttributes> & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes]?: BaseRangegroup[K] } & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes as `attr:${K}`]?: BaseRangegroupAttributes[K] } & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes as `prop:${K}`]?: BaseRangegroup[K] };
         "base-scroll-area": BaseScrollArea;
+        "base-submenu": BaseSubmenu;
         "base-tabs": Omit<BaseTabs, keyof BaseTabsAttributes> & { [K in keyof BaseTabs & keyof BaseTabsAttributes]?: BaseTabs[K] } & { [K in keyof BaseTabs & keyof BaseTabsAttributes as `attr:${K}`]?: BaseTabsAttributes[K] } & { [K in keyof BaseTabs & keyof BaseTabsAttributes as `prop:${K}`]?: BaseTabs[K] };
         "base-toolbar": BaseToolbar;
     }
@@ -428,6 +597,22 @@ declare module "@stencil/core" {
             "base-field-errors": LocalJSX.IntrinsicElements["base-field-errors"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorsElement>;
             "base-form-error": LocalJSX.IntrinsicElements["base-form-error"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorElement>;
             "base-form-errors": LocalJSX.IntrinsicElements["base-form-errors"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorsElement>;
+            /**
+             * A stand-in for `<menuitem>`.
+             */
+            "base-menuitem": LocalJSX.IntrinsicElements["base-menuitem"] & JSXBase.HTMLAttributes<HTMLBaseMenuitemElement>;
+            /**
+             * A stand-in for `<menuitemcheckbox>`.
+             */
+            "base-menuitemcheckbox": LocalJSX.IntrinsicElements["base-menuitemcheckbox"] & JSXBase.HTMLAttributes<HTMLBaseMenuitemcheckboxElement>;
+            /**
+             * A stand-in for `<menuitemradio>`.
+             */
+            "base-menuitemradio": LocalJSX.IntrinsicElements["base-menuitemradio"] & JSXBase.HTMLAttributes<HTMLBaseMenuitemradioElement>;
+            /**
+             * A stand-in for `<menulist>`.
+             */
+            "base-menulist": LocalJSX.IntrinsicElements["base-menulist"] & JSXBase.HTMLAttributes<HTMLBaseMenulistElement>;
             "base-number-field": LocalJSX.IntrinsicElements["base-number-field"] & JSXBase.HTMLAttributes<HTMLBaseNumberFieldElement>;
             "base-otp-field": LocalJSX.IntrinsicElements["base-otp-field"] & JSXBase.HTMLAttributes<HTMLBaseOtpFieldElement>;
             /**
@@ -438,6 +623,11 @@ declare module "@stencil/core" {
              * A stand-in for scroll-state `scrollable` queries: delete it once they ship everywhere.
              */
             "base-scroll-area": LocalJSX.IntrinsicElements["base-scroll-area"] & JSXBase.HTMLAttributes<HTMLBaseScrollAreaElement>;
+            /**
+             * A stand-in for `<submenu>`: its first item opens the menulist that follows it. The proposal
+             * gives it `display: contents`, which a recipe applies, since no CSS ships.
+             */
+            "base-submenu": LocalJSX.IntrinsicElements["base-submenu"] & JSXBase.HTMLAttributes<HTMLBaseSubmenuElement>;
             "base-tabs": LocalJSX.IntrinsicElements["base-tabs"] & JSXBase.HTMLAttributes<HTMLBaseTabsElement>;
             /**
              * A stand-in for `<toolbar>`: delete it or make it a polyfill once that ships.
