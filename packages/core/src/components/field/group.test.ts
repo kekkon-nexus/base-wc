@@ -67,7 +67,8 @@ it("radios are filled and dirty only once one is checked", async () => {
 it("touched after any radio loses focus", async () => {
 	const { field, inputs } = await mount(RADIOS);
 
-	await userEvent.click(at(inputs, 1));
+	// Safari does not focus a radio on click, so the test focuses it directly.
+	at(inputs, 1).focus();
 	await userEvent.tab();
 
 	expect(field.matches(":state(touched)")).toBe(true);
