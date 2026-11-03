@@ -46,6 +46,7 @@
 		"@stencil/core": "catalog:stencil"
 	},
 	"devDependencies": {
+		"@microsoft/focusgroup-polyfill": "^1.6.0",
 		"@stencil/unplugin": "catalog:stencil",
 		"@vitest/browser-webdriverio": "catalog:test",
 		"vite-plus": "catalog:",
