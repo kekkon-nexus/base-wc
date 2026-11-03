@@ -48,6 +48,9 @@ const config: ReturnType<typeof defineConfig> = defineConfig({
 
 	test: {
 		include: ["src/**/*.test.{ts,tsx}"],
+		// Files share one browser, and tests that move focus in parallel iframes take it from each
+		// other in Firefox.
+		fileParallelism: false,
 		browser: {
 			enabled: true,
 			headless: true,

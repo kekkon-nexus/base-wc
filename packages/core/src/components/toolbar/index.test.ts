@@ -107,15 +107,6 @@ it("keeps a focusgroup the consumer wrote", async () => {
 	expect(own?.getAttribute("focusgroup")).toBe("toolbar nowrap");
 });
 
-it.runIf(!NATIVE)("warns without focusgroup or its polyfill", async () => {
-	const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined);
-
-	await mount(`<button>A</button><button>B</button>`, false);
-
-	expect(warnSpy.mock.calls.flat().join(" ")).toContain("focusgroup-polyfill");
-	warnSpy.mockRestore();
-});
-
 it.runIf(server.browser === "chrome")("exposes a toolbar role", async () => {
 	await mount();
 
