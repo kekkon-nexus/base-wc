@@ -118,6 +118,11 @@ export namespace Components {
          */
         "values": number[];
     }
+    /**
+     * A stand-in for scroll-state `scrollable` queries: delete it once they ship everywhere.
+     */
+    interface BaseScrollArea {
+    }
     interface BaseTabs {
         /**
           * `automatic` selects a tab when it gets focus; `manual` only on click, Enter or Space.
@@ -194,6 +199,15 @@ declare global {
         prototype: HTMLBaseRangegroupElement;
         new (): HTMLBaseRangegroupElement;
     };
+    /**
+     * A stand-in for scroll-state `scrollable` queries: delete it once they ship everywhere.
+     */
+    interface HTMLBaseScrollAreaElement extends Components.BaseScrollArea, HTMLStencilElement {
+    }
+    var HTMLBaseScrollAreaElement: {
+        prototype: HTMLBaseScrollAreaElement;
+        new (): HTMLBaseScrollAreaElement;
+    };
     interface HTMLBaseTabsElement extends Components.BaseTabs, HTMLStencilElement {
     }
     var HTMLBaseTabsElement: {
@@ -219,6 +233,7 @@ declare global {
         "base-number-field": HTMLBaseNumberFieldElement;
         "base-otp-field": HTMLBaseOtpFieldElement;
         "base-rangegroup": HTMLBaseRangegroupElement;
+        "base-scroll-area": HTMLBaseScrollAreaElement;
         "base-tabs": HTMLBaseTabsElement;
         "base-toolbar": HTMLBaseToolbarElement;
     }
@@ -326,6 +341,11 @@ declare namespace LocalJSX {
          */
         "values"?: number[];
     }
+    /**
+     * A stand-in for scroll-state `scrollable` queries: delete it once they ship everywhere.
+     */
+    interface BaseScrollArea {
+    }
     interface BaseTabs {
         /**
           * `automatic` selects a tab when it gets focus; `manual` only on click, Enter or Space.
@@ -380,6 +400,7 @@ declare namespace LocalJSX {
         "base-number-field": BaseNumberField;
         "base-otp-field": Omit<BaseOtpField, keyof BaseOtpFieldAttributes> & { [K in keyof BaseOtpField & keyof BaseOtpFieldAttributes]?: BaseOtpField[K] } & { [K in keyof BaseOtpField & keyof BaseOtpFieldAttributes as `attr:${K}`]?: BaseOtpFieldAttributes[K] } & { [K in keyof BaseOtpField & keyof BaseOtpFieldAttributes as `prop:${K}`]?: BaseOtpField[K] };
         "base-rangegroup": Omit<BaseRangegroup, keyof BaseRangegroupAttributes> & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes]?: BaseRangegroup[K] } & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes as `attr:${K}`]?: BaseRangegroupAttributes[K] } & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes as `prop:${K}`]?: BaseRangegroup[K] };
+        "base-scroll-area": BaseScrollArea;
         "base-tabs": Omit<BaseTabs, keyof BaseTabsAttributes> & { [K in keyof BaseTabs & keyof BaseTabsAttributes]?: BaseTabs[K] } & { [K in keyof BaseTabs & keyof BaseTabsAttributes as `attr:${K}`]?: BaseTabsAttributes[K] } & { [K in keyof BaseTabs & keyof BaseTabsAttributes as `prop:${K}`]?: BaseTabs[K] };
         "base-toolbar": BaseToolbar;
     }
@@ -400,6 +421,10 @@ declare module "@stencil/core" {
              * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
              */
             "base-rangegroup": LocalJSX.IntrinsicElements["base-rangegroup"] & JSXBase.HTMLAttributes<HTMLBaseRangegroupElement>;
+            /**
+             * A stand-in for scroll-state `scrollable` queries: delete it once they ship everywhere.
+             */
+            "base-scroll-area": LocalJSX.IntrinsicElements["base-scroll-area"] & JSXBase.HTMLAttributes<HTMLBaseScrollAreaElement>;
             "base-tabs": LocalJSX.IntrinsicElements["base-tabs"] & JSXBase.HTMLAttributes<HTMLBaseTabsElement>;
             /**
              * A stand-in for `<toolbar>`: delete it or make it a polyfill once that ships.
