@@ -56,3 +56,21 @@ export function warnMissingErrors(field: Element, control: Control): void {
 		}
 	}
 }
+
+/**
+ * The polyfill adds no `focusGroup` property, so it is told apart by the `tabindex="-1"` it
+ * writes on items other than the entry one, a task after connect.
+ *
+ * @param scope the element holding the focusgroup items
+ * @param tag the component that needs focusgroup, for the message
+ */
+export function warnWithoutFocusgroup(scope: Element, tag: string): void {
+	if ("focusGroup" in HTMLElement.prototype) return;
+	setTimeout(() => {
+		if (!scope.querySelector('[tabindex="-1"]')) {
+			warn(
+				`<${tag}> needs focusgroup, which this browser lacks: load @microsoft/focusgroup-polyfill.`,
+			);
+		}
+	}, 0);
+}

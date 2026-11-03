@@ -1,6 +1,6 @@
 import { AttachInternals, Component, Element } from "@stencil/core";
 
-import { warn } from "@/utils/dev";
+import { warnWithoutFocusgroup } from "@/utils/dev";
 
 /** A stand-in for `<toolbar>`: delete it or make it a polyfill once that ships. */
 @Component({
@@ -29,21 +29,6 @@ export class Toolbar {
 		}
 	};
 
-	/**
-	 * The polyfill adds no `focusGroup` property, so it is told apart by the `tabindex="-1"` it
-	 * writes on items other than the entry one.
-	 */
-	#checkFocusgroup(): void {
-		if ("focusGroup" in HTMLElement.prototype) return;
-		setTimeout(() => {
-			if (!this.host.querySelector('[tabindex="-1"]')) {
-				warn(
-					"<base-toolbar> needs focusgroup, which this browser lacks: load @microsoft/focusgroup-polyfill.",
-				);
-			}
-		}, 0);
-	}
-
 	connectedCallback(): void {
 		this.internals.role = "toolbar";
 		if (!this.host.hasAttribute("focusgroup")) {
@@ -54,7 +39,7 @@ export class Toolbar {
 			capture: true,
 			signal: this.#abort.signal,
 		});
-		if (__DEV__) this.#checkFocusgroup();
+		if (__DEV__) warnWithoutFocusgroup(this.host, "base-toolbar");
 	}
 
 	disconnectedCallback(): void {
