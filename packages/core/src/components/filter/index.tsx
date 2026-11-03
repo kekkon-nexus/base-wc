@@ -165,22 +165,37 @@ export class Filter {
 	 * @param event the press
 	 */
 	#onPointerDown = (event: PointerEvent): void => {
-		if (this.#optionOf(event.target)) event.preventDefault();
+		if (this.#optionOf(event)) event.preventDefault();
 	};
 
-	#onClick = (event: Event): void => {
-		const option = this.#optionOf(event.target);
+	#onClick = (event: MouseEvent): void => {
+		const option = this.#optionOf(event);
 		if (option) this.#choose(option);
 	};
 
 	/**
-	 * @param target an event target
-	 * @returns the option it is in, if that option belongs to this filter's list
+	 * @param event a press or click
+	 * @returns the option under it, if that option belongs to this filter's list
 	 */
-	#optionOf(target: EventTarget | null): HTMLElement | undefined {
-		const option = (target as HTMLElement | null)?.closest<HTMLElement>(
-			'option, [role="option"]',
-		);
+	#optionOf(event: MouseEvent): HTMLElement | undefined {
+		const target = event.target as HTMLElement | null;
+		// WebKit sends mouse events in a `<select size>` to the select, not the option.
+		if (
+			target &&
+			target === this.#list &&
+			target instanceof HTMLSelectElement
+		) {
+			return this.#visible().find((option) => {
+				const rect = option.getBoundingClientRect();
+				return (
+					event.clientY >= rect.top &&
+					event.clientY < rect.bottom &&
+					event.clientX >= rect.left &&
+					event.clientX < rect.right
+				);
+			});
+		}
+		const option = target?.closest<HTMLElement>('option, [role="option"]');
 		return option && this.#options().includes(option) ? option : undefined;
 	}
 
