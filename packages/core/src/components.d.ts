@@ -206,6 +206,47 @@ export namespace Components {
         "manualAria": boolean;
     }
     /**
+     * One toast, rendered by the consumer. It hides, never removes: a framework keeps its own list,
+     * so the toast fires `toggle` and the consumer drops it from state.
+     */
+    interface BaseToast {
+        /**
+          * Hides it and fires `toggle`; the consumer removes it.
+          * @returns a promise that resolves once it is hidden
+         */
+        "dismiss": () => Promise<void>;
+        /**
+          * @param paused whether the toaster is paused, by hover, focus or a hidden page
+          * @returns a promise that resolves once the timer follows
+         */
+        "pause": (paused: boolean) => Promise<void>;
+        /**
+          * Milliseconds before it hides; 0 never. Defaults to the toaster's, or none with a button inside.
+         */
+        "timeout"?: number;
+    }
+    /**
+     * The region toasts stack in, in the top layer while any is shown.
+     */
+    interface BaseToaster {
+        /**
+          * Toasts shown at once; older ones beyond it get `:state(limited)`.
+          * @default 3
+         */
+        "limit": number;
+        /**
+          * Adds a toast the page built, for plain script; frameworks render toasts themselves.
+          * @param toast a `base-toast`
+          * @returns a promise that resolves once it is added
+         */
+        "show": (toast: HTMLElement) => Promise<void>;
+        /**
+          * Milliseconds before a toast hides; 0 never.
+          * @default 5000
+         */
+        "timeout": number;
+    }
+    /**
      * A stand-in for `<toolbar>`: delete it or make it a polyfill once that ships.
      */
     interface BaseToolbar {
@@ -366,6 +407,25 @@ declare global {
         new (): HTMLBaseTabsElement;
     };
     /**
+     * One toast, rendered by the consumer. It hides, never removes: a framework keeps its own list,
+     * so the toast fires `toggle` and the consumer drops it from state.
+     */
+    interface HTMLBaseToastElement extends Components.BaseToast, HTMLStencilElement {
+    }
+    var HTMLBaseToastElement: {
+        prototype: HTMLBaseToastElement;
+        new (): HTMLBaseToastElement;
+    };
+    /**
+     * The region toasts stack in, in the top layer while any is shown.
+     */
+    interface HTMLBaseToasterElement extends Components.BaseToaster, HTMLStencilElement {
+    }
+    var HTMLBaseToasterElement: {
+        prototype: HTMLBaseToasterElement;
+        new (): HTMLBaseToasterElement;
+    };
+    /**
      * A stand-in for `<toolbar>`: delete it or make it a polyfill once that ships.
      */
     interface HTMLBaseToolbarElement extends Components.BaseToolbar, HTMLStencilElement {
@@ -395,6 +455,8 @@ declare global {
         "base-scroll-area": HTMLBaseScrollAreaElement;
         "base-submenu": HTMLBaseSubmenuElement;
         "base-tabs": HTMLBaseTabsElement;
+        "base-toast": HTMLBaseToastElement;
+        "base-toaster": HTMLBaseToasterElement;
         "base-toolbar": HTMLBaseToolbarElement;
     }
 }
@@ -589,6 +651,31 @@ declare namespace LocalJSX {
         "manualAria"?: boolean;
     }
     /**
+     * One toast, rendered by the consumer. It hides, never removes: a framework keeps its own list,
+     * so the toast fires `toggle` and the consumer drops it from state.
+     */
+    interface BaseToast {
+        /**
+          * Milliseconds before it hides; 0 never. Defaults to the toaster's, or none with a button inside.
+         */
+        "timeout"?: number;
+    }
+    /**
+     * The region toasts stack in, in the top layer while any is shown.
+     */
+    interface BaseToaster {
+        /**
+          * Toasts shown at once; older ones beyond it get `:state(limited)`.
+          * @default 3
+         */
+        "limit"?: number;
+        /**
+          * Milliseconds before a toast hides; 0 never.
+          * @default 5000
+         */
+        "timeout"?: number;
+    }
+    /**
      * A stand-in for `<toolbar>`: delete it or make it a polyfill once that ships.
      */
     interface BaseToolbar {
@@ -630,6 +717,13 @@ declare namespace LocalJSX {
         "activation": "automatic" | "manual";
         "manualAria": boolean;
     }
+    interface BaseToastAttributes {
+        "timeout": number;
+    }
+    interface BaseToasterAttributes {
+        "timeout": number;
+        "limit": number;
+    }
 
     interface IntrinsicElements {
         "base-checkbox-group": BaseCheckboxGroup;
@@ -652,6 +746,8 @@ declare namespace LocalJSX {
         "base-scroll-area": BaseScrollArea;
         "base-submenu": BaseSubmenu;
         "base-tabs": Omit<BaseTabs, keyof BaseTabsAttributes> & { [K in keyof BaseTabs & keyof BaseTabsAttributes]?: BaseTabs[K] } & { [K in keyof BaseTabs & keyof BaseTabsAttributes as `attr:${K}`]?: BaseTabsAttributes[K] } & { [K in keyof BaseTabs & keyof BaseTabsAttributes as `prop:${K}`]?: BaseTabs[K] };
+        "base-toast": Omit<BaseToast, keyof BaseToastAttributes> & { [K in keyof BaseToast & keyof BaseToastAttributes]?: BaseToast[K] } & { [K in keyof BaseToast & keyof BaseToastAttributes as `attr:${K}`]?: BaseToastAttributes[K] } & { [K in keyof BaseToast & keyof BaseToastAttributes as `prop:${K}`]?: BaseToast[K] };
+        "base-toaster": Omit<BaseToaster, keyof BaseToasterAttributes> & { [K in keyof BaseToaster & keyof BaseToasterAttributes]?: BaseToaster[K] } & { [K in keyof BaseToaster & keyof BaseToasterAttributes as `attr:${K}`]?: BaseToasterAttributes[K] } & { [K in keyof BaseToaster & keyof BaseToasterAttributes as `prop:${K}`]?: BaseToaster[K] };
         "base-toolbar": BaseToolbar;
     }
 }
@@ -712,6 +808,15 @@ declare module "@stencil/core" {
              */
             "base-submenu": LocalJSX.IntrinsicElements["base-submenu"] & JSXBase.HTMLAttributes<HTMLBaseSubmenuElement>;
             "base-tabs": LocalJSX.IntrinsicElements["base-tabs"] & JSXBase.HTMLAttributes<HTMLBaseTabsElement>;
+            /**
+             * One toast, rendered by the consumer. It hides, never removes: a framework keeps its own list,
+             * so the toast fires `toggle` and the consumer drops it from state.
+             */
+            "base-toast": LocalJSX.IntrinsicElements["base-toast"] & JSXBase.HTMLAttributes<HTMLBaseToastElement>;
+            /**
+             * The region toasts stack in, in the top layer while any is shown.
+             */
+            "base-toaster": LocalJSX.IntrinsicElements["base-toaster"] & JSXBase.HTMLAttributes<HTMLBaseToasterElement>;
             /**
              * A stand-in for `<toolbar>`: delete it or make it a polyfill once that ships.
              */
