@@ -47,6 +47,12 @@ export namespace Components {
     }
     interface BaseFieldErrors {
     }
+    /**
+     * A stand-in for filterable select (option A) and the datalist combobox: the input named by
+     * `filter` narrows the options of the `<select>` or `role="listbox"` element it points at.
+     */
+    interface BaseFilter {
+    }
     interface BaseFormError {
         /**
           * The form-level key this message is for. Without it, this is the catch-all.
@@ -246,6 +252,16 @@ declare global {
         prototype: HTMLBaseFieldErrorsElement;
         new (): HTMLBaseFieldErrorsElement;
     };
+    /**
+     * A stand-in for filterable select (option A) and the datalist combobox: the input named by
+     * `filter` narrows the options of the `<select>` or `role="listbox"` element it points at.
+     */
+    interface HTMLBaseFilterElement extends Components.BaseFilter, HTMLStencilElement {
+    }
+    var HTMLBaseFilterElement: {
+        prototype: HTMLBaseFilterElement;
+        new (): HTMLBaseFilterElement;
+    };
     interface HTMLBaseFormErrorElement extends Components.BaseFormError, HTMLStencilElement {
     }
     var HTMLBaseFormErrorElement: {
@@ -365,6 +381,7 @@ declare global {
         "base-field": HTMLBaseFieldElement;
         "base-field-error": HTMLBaseFieldErrorElement;
         "base-field-errors": HTMLBaseFieldErrorsElement;
+        "base-filter": HTMLBaseFilterElement;
         "base-form-error": HTMLBaseFormErrorElement;
         "base-form-errors": HTMLBaseFormErrorsElement;
         "base-menubar": HTMLBaseMenubarElement;
@@ -423,6 +440,12 @@ declare namespace LocalJSX {
         "match"?: string;
     }
     interface BaseFieldErrors {
+    }
+    /**
+     * A stand-in for filterable select (option A) and the datalist combobox: the input named by
+     * `filter` narrows the options of the `<select>` or `role="listbox"` element it points at.
+     */
+    interface BaseFilter {
     }
     interface BaseFormError {
         /**
@@ -615,6 +638,7 @@ declare namespace LocalJSX {
         "base-field": Omit<BaseField, keyof BaseFieldAttributes> & { [K in keyof BaseField & keyof BaseFieldAttributes]?: BaseField[K] } & { [K in keyof BaseField & keyof BaseFieldAttributes as `attr:${K}`]?: BaseFieldAttributes[K] } & { [K in keyof BaseField & keyof BaseFieldAttributes as `prop:${K}`]?: BaseField[K] };
         "base-field-error": Omit<BaseFieldError, keyof BaseFieldErrorAttributes> & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes]?: BaseFieldError[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `attr:${K}`]?: BaseFieldErrorAttributes[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `prop:${K}`]?: BaseFieldError[K] };
         "base-field-errors": BaseFieldErrors;
+        "base-filter": BaseFilter;
         "base-form-error": Omit<BaseFormError, keyof BaseFormErrorAttributes> & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes]?: BaseFormError[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `attr:${K}`]?: BaseFormErrorAttributes[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `prop:${K}`]?: BaseFormError[K] };
         "base-form-errors": BaseFormErrors;
         "base-menubar": BaseMenubar;
@@ -645,6 +669,11 @@ declare module "@stencil/core" {
             "base-field": LocalJSX.IntrinsicElements["base-field"] & JSXBase.HTMLAttributes<HTMLBaseFieldElement>;
             "base-field-error": LocalJSX.IntrinsicElements["base-field-error"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorElement>;
             "base-field-errors": LocalJSX.IntrinsicElements["base-field-errors"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorsElement>;
+            /**
+             * A stand-in for filterable select (option A) and the datalist combobox: the input named by
+             * `filter` narrows the options of the `<select>` or `role="listbox"` element it points at.
+             */
+            "base-filter": LocalJSX.IntrinsicElements["base-filter"] & JSXBase.HTMLAttributes<HTMLBaseFilterElement>;
             "base-form-error": LocalJSX.IntrinsicElements["base-form-error"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorElement>;
             "base-form-errors": LocalJSX.IntrinsicElements["base-form-errors"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorsElement>;
             /**
