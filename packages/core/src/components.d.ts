@@ -118,6 +118,11 @@ export namespace Components {
          */
         "values": number[];
     }
+    /**
+     * A stand-in for `<toolbar>`: delete it or make it a polyfill once that ships.
+     */
+    interface BaseToolbar {
+    }
 }
 declare global {
     interface HTMLBaseCheckboxGroupElement extends Components.BaseCheckboxGroup, HTMLStencilElement {
@@ -177,6 +182,15 @@ declare global {
         prototype: HTMLBaseRangegroupElement;
         new (): HTMLBaseRangegroupElement;
     };
+    /**
+     * A stand-in for `<toolbar>`: delete it or make it a polyfill once that ships.
+     */
+    interface HTMLBaseToolbarElement extends Components.BaseToolbar, HTMLStencilElement {
+    }
+    var HTMLBaseToolbarElement: {
+        prototype: HTMLBaseToolbarElement;
+        new (): HTMLBaseToolbarElement;
+    };
     interface HTMLElementTagNameMap {
         "base-checkbox-group": HTMLBaseCheckboxGroupElement;
         "base-field": HTMLBaseFieldElement;
@@ -187,6 +201,7 @@ declare global {
         "base-number-field": HTMLBaseNumberFieldElement;
         "base-otp-field": HTMLBaseOtpFieldElement;
         "base-rangegroup": HTMLBaseRangegroupElement;
+        "base-toolbar": HTMLBaseToolbarElement;
     }
 }
 declare namespace LocalJSX {
@@ -292,6 +307,11 @@ declare namespace LocalJSX {
          */
         "values"?: number[];
     }
+    /**
+     * A stand-in for `<toolbar>`: delete it or make it a polyfill once that ships.
+     */
+    interface BaseToolbar {
+    }
 
     interface BaseFieldAttributes {
         "validateOn": "input" | "blur" | "submit";
@@ -325,6 +345,7 @@ declare namespace LocalJSX {
         "base-number-field": BaseNumberField;
         "base-otp-field": Omit<BaseOtpField, keyof BaseOtpFieldAttributes> & { [K in keyof BaseOtpField & keyof BaseOtpFieldAttributes]?: BaseOtpField[K] } & { [K in keyof BaseOtpField & keyof BaseOtpFieldAttributes as `attr:${K}`]?: BaseOtpFieldAttributes[K] } & { [K in keyof BaseOtpField & keyof BaseOtpFieldAttributes as `prop:${K}`]?: BaseOtpField[K] };
         "base-rangegroup": Omit<BaseRangegroup, keyof BaseRangegroupAttributes> & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes]?: BaseRangegroup[K] } & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes as `attr:${K}`]?: BaseRangegroupAttributes[K] } & { [K in keyof BaseRangegroup & keyof BaseRangegroupAttributes as `prop:${K}`]?: BaseRangegroup[K] };
+        "base-toolbar": BaseToolbar;
     }
 }
 export { LocalJSX as JSX };
@@ -343,6 +364,10 @@ declare module "@stencil/core" {
              * A stand-in for `<rangegroup>`: delete it or make it a polyfill once that ships.
              */
             "base-rangegroup": LocalJSX.IntrinsicElements["base-rangegroup"] & JSXBase.HTMLAttributes<HTMLBaseRangegroupElement>;
+            /**
+             * A stand-in for `<toolbar>`: delete it or make it a polyfill once that ships.
+             */
+            "base-toolbar": LocalJSX.IntrinsicElements["base-toolbar"] & JSXBase.HTMLAttributes<HTMLBaseToolbarElement>;
         }
     }
 }

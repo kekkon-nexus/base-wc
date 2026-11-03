@@ -27,6 +27,9 @@
         "vite-plus": "catalog:",
         "webdriverio": "catalog:test",
       },
+      "peerDependencies": {
+        "@microsoft/focusgroup-polyfill": "^1.6.0",
+      },
     },
   },
   "overrides": {
@@ -136,6 +139,8 @@
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
 
     "@kekkon-nexus/config": ["@kekkon-nexus/config@4.0.0", "", { "dependencies": { "@commitlint/config-conventional": "^21.2.3", "@commitlint/format": "^21.2.3", "commitlint-config-gitmoji": "^2.3.1" }, "peerDependencies": { "@commitlint/cli": "^21.2.3", "oxfmt": ">=0.73.0 <1", "oxlint": "^1.88.0", "oxlint-tsgolint": "^7.0.2004", "typescript": "^7.0.2", "vite-plus": "^1.2.0" }, "optionalPeers": ["@commitlint/cli", "oxfmt", "oxlint", "oxlint-tsgolint", "vite-plus"] }, "sha512-zE9GtOYihP9odi+7EuQ0/u2ESHwLgXcWtEtGXlkrYDk5PzPjoJCJgkD0Z62GrA1HpfRq/bv+O2voTQz6UtfSrw=="],
+
+    "@microsoft/focusgroup-polyfill": ["@microsoft/focusgroup-polyfill@1.6.0", "", {}, "sha512-SlJO8FKrdFdSEXtNTNPTlCeqyqbpyLf6suYHTK7G8WYXZf8/BWK0ucERiPgrUIpNewfQjV82BahSOW/p8YNJ1A=="],
 
     "@oxc-project/runtime": ["@oxc-project/runtime@0.154.0", "", {}, "sha512-cBQNGoh659BNgvA8OC/e4BNDtFkv03dJaYdkp2adgOQNtISNAPQ+nB4S8XvWtNk7Xl+0g+7aa+iRGR25Xycd1Q=="],
 
