@@ -7,6 +7,8 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/runtime";
 export namespace Components {
     interface BaseCheckboxGroup {
     }
+    interface BaseDrawer {
+    }
     interface BaseField {
         /**
           * The consumer wires ARIA on the control: field writes none.
@@ -148,6 +150,12 @@ declare global {
         prototype: HTMLBaseCheckboxGroupElement;
         new (): HTMLBaseCheckboxGroupElement;
     };
+    interface HTMLBaseDrawerElement extends Components.BaseDrawer, HTMLStencilElement {
+    }
+    var HTMLBaseDrawerElement: {
+        prototype: HTMLBaseDrawerElement;
+        new (): HTMLBaseDrawerElement;
+    };
     interface HTMLBaseFieldElement extends Components.BaseField, HTMLStencilElement {
     }
     var HTMLBaseFieldElement: {
@@ -225,6 +233,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "base-checkbox-group": HTMLBaseCheckboxGroupElement;
+        "base-drawer": HTMLBaseDrawerElement;
         "base-field": HTMLBaseFieldElement;
         "base-field-error": HTMLBaseFieldErrorElement;
         "base-field-errors": HTMLBaseFieldErrorsElement;
@@ -240,6 +249,8 @@ declare global {
 }
 declare namespace LocalJSX {
     interface BaseCheckboxGroup {
+    }
+    interface BaseDrawer {
     }
     interface BaseField {
         /**
@@ -392,6 +403,7 @@ declare namespace LocalJSX {
 
     interface IntrinsicElements {
         "base-checkbox-group": BaseCheckboxGroup;
+        "base-drawer": BaseDrawer;
         "base-field": Omit<BaseField, keyof BaseFieldAttributes> & { [K in keyof BaseField & keyof BaseFieldAttributes]?: BaseField[K] } & { [K in keyof BaseField & keyof BaseFieldAttributes as `attr:${K}`]?: BaseFieldAttributes[K] } & { [K in keyof BaseField & keyof BaseFieldAttributes as `prop:${K}`]?: BaseField[K] };
         "base-field-error": Omit<BaseFieldError, keyof BaseFieldErrorAttributes> & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes]?: BaseFieldError[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `attr:${K}`]?: BaseFieldErrorAttributes[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `prop:${K}`]?: BaseFieldError[K] };
         "base-field-errors": BaseFieldErrors;
@@ -410,6 +422,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "base-checkbox-group": LocalJSX.IntrinsicElements["base-checkbox-group"] & JSXBase.HTMLAttributes<HTMLBaseCheckboxGroupElement>;
+            "base-drawer": LocalJSX.IntrinsicElements["base-drawer"] & JSXBase.HTMLAttributes<HTMLBaseDrawerElement>;
             "base-field": LocalJSX.IntrinsicElements["base-field"] & JSXBase.HTMLAttributes<HTMLBaseFieldElement>;
             "base-field-error": LocalJSX.IntrinsicElements["base-field-error"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorElement>;
             "base-field-errors": LocalJSX.IntrinsicElements["base-field-errors"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorsElement>;
