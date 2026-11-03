@@ -1,5 +1,11 @@
 export const ITEMS = "base-menuitem, base-menuitemcheckbox, base-menuitemradio";
 
+/** What opened each menulist, set by whoever opens it, to return focus there. */
+export const sources: WeakMap<HTMLElement, HTMLElement> = new WeakMap<
+	HTMLElement,
+	HTMLElement
+>();
+
 /**
  * Shared by the three item elements: they are focusable, take Enter and Space as a click, and
  * stay focusable when disabled, which the proposal reflects to `aria-disabled`.

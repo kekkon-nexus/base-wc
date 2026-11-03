@@ -7,6 +7,12 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/runtime";
 export namespace Components {
     interface BaseCheckboxGroup {
     }
+    /**
+     * Opens its menulist from `contextmenu` over its area. Anchor positioning anchors to elements,
+     * not points, so the menulist gets the pointer in custom properties for a recipe to place it.
+     */
+    interface BaseContextMenu {
+    }
     interface BaseDrawer {
     }
     interface BaseField {
@@ -55,6 +61,11 @@ export namespace Components {
 		fields?: Record<string, string>;
 		form?: string;
 	};
+    }
+    /**
+     * A stand-in for `<menubar>`.
+     */
+    interface BaseMenubar {
     }
     /**
      * A stand-in for `<menuitem>`.
@@ -201,6 +212,16 @@ declare global {
         prototype: HTMLBaseCheckboxGroupElement;
         new (): HTMLBaseCheckboxGroupElement;
     };
+    /**
+     * Opens its menulist from `contextmenu` over its area. Anchor positioning anchors to elements,
+     * not points, so the menulist gets the pointer in custom properties for a recipe to place it.
+     */
+    interface HTMLBaseContextMenuElement extends Components.BaseContextMenu, HTMLStencilElement {
+    }
+    var HTMLBaseContextMenuElement: {
+        prototype: HTMLBaseContextMenuElement;
+        new (): HTMLBaseContextMenuElement;
+    };
     interface HTMLBaseDrawerElement extends Components.BaseDrawer, HTMLStencilElement {
     }
     var HTMLBaseDrawerElement: {
@@ -236,6 +257,15 @@ declare global {
     var HTMLBaseFormErrorsElement: {
         prototype: HTMLBaseFormErrorsElement;
         new (): HTMLBaseFormErrorsElement;
+    };
+    /**
+     * A stand-in for `<menubar>`.
+     */
+    interface HTMLBaseMenubarElement extends Components.BaseMenubar, HTMLStencilElement {
+    }
+    var HTMLBaseMenubarElement: {
+        prototype: HTMLBaseMenubarElement;
+        new (): HTMLBaseMenubarElement;
     };
     /**
      * A stand-in for `<menuitem>`.
@@ -330,12 +360,14 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "base-checkbox-group": HTMLBaseCheckboxGroupElement;
+        "base-context-menu": HTMLBaseContextMenuElement;
         "base-drawer": HTMLBaseDrawerElement;
         "base-field": HTMLBaseFieldElement;
         "base-field-error": HTMLBaseFieldErrorElement;
         "base-field-errors": HTMLBaseFieldErrorsElement;
         "base-form-error": HTMLBaseFormErrorElement;
         "base-form-errors": HTMLBaseFormErrorsElement;
+        "base-menubar": HTMLBaseMenubarElement;
         "base-menuitem": HTMLBaseMenuitemElement;
         "base-menuitemcheckbox": HTMLBaseMenuitemcheckboxElement;
         "base-menuitemradio": HTMLBaseMenuitemradioElement;
@@ -351,6 +383,12 @@ declare global {
 }
 declare namespace LocalJSX {
     interface BaseCheckboxGroup {
+    }
+    /**
+     * Opens its menulist from `contextmenu` over its area. Anchor positioning anchors to elements,
+     * not points, so the menulist gets the pointer in custom properties for a recipe to place it.
+     */
+    interface BaseContextMenu {
     }
     interface BaseDrawer {
     }
@@ -400,6 +438,11 @@ declare namespace LocalJSX {
 		fields?: Record<string, string>;
 		form?: string;
 	};
+    }
+    /**
+     * A stand-in for `<menubar>`.
+     */
+    interface BaseMenubar {
     }
     /**
      * A stand-in for `<menuitem>`.
@@ -567,12 +610,14 @@ declare namespace LocalJSX {
 
     interface IntrinsicElements {
         "base-checkbox-group": BaseCheckboxGroup;
+        "base-context-menu": BaseContextMenu;
         "base-drawer": BaseDrawer;
         "base-field": Omit<BaseField, keyof BaseFieldAttributes> & { [K in keyof BaseField & keyof BaseFieldAttributes]?: BaseField[K] } & { [K in keyof BaseField & keyof BaseFieldAttributes as `attr:${K}`]?: BaseFieldAttributes[K] } & { [K in keyof BaseField & keyof BaseFieldAttributes as `prop:${K}`]?: BaseField[K] };
         "base-field-error": Omit<BaseFieldError, keyof BaseFieldErrorAttributes> & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes]?: BaseFieldError[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `attr:${K}`]?: BaseFieldErrorAttributes[K] } & { [K in keyof BaseFieldError & keyof BaseFieldErrorAttributes as `prop:${K}`]?: BaseFieldError[K] };
         "base-field-errors": BaseFieldErrors;
         "base-form-error": Omit<BaseFormError, keyof BaseFormErrorAttributes> & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes]?: BaseFormError[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `attr:${K}`]?: BaseFormErrorAttributes[K] } & { [K in keyof BaseFormError & keyof BaseFormErrorAttributes as `prop:${K}`]?: BaseFormError[K] };
         "base-form-errors": BaseFormErrors;
+        "base-menubar": BaseMenubar;
         "base-menuitem": Omit<BaseMenuitem, keyof BaseMenuitemAttributes> & { [K in keyof BaseMenuitem & keyof BaseMenuitemAttributes]?: BaseMenuitem[K] } & { [K in keyof BaseMenuitem & keyof BaseMenuitemAttributes as `attr:${K}`]?: BaseMenuitemAttributes[K] } & { [K in keyof BaseMenuitem & keyof BaseMenuitemAttributes as `prop:${K}`]?: BaseMenuitem[K] };
         "base-menuitemcheckbox": Omit<BaseMenuitemcheckbox, keyof BaseMenuitemcheckboxAttributes> & { [K in keyof BaseMenuitemcheckbox & keyof BaseMenuitemcheckboxAttributes]?: BaseMenuitemcheckbox[K] } & { [K in keyof BaseMenuitemcheckbox & keyof BaseMenuitemcheckboxAttributes as `attr:${K}`]?: BaseMenuitemcheckboxAttributes[K] } & { [K in keyof BaseMenuitemcheckbox & keyof BaseMenuitemcheckboxAttributes as `prop:${K}`]?: BaseMenuitemcheckbox[K] };
         "base-menuitemradio": Omit<BaseMenuitemradio, keyof BaseMenuitemradioAttributes> & { [K in keyof BaseMenuitemradio & keyof BaseMenuitemradioAttributes]?: BaseMenuitemradio[K] } & { [K in keyof BaseMenuitemradio & keyof BaseMenuitemradioAttributes as `attr:${K}`]?: BaseMenuitemradioAttributes[K] } & { [K in keyof BaseMenuitemradio & keyof BaseMenuitemradioAttributes as `prop:${K}`]?: BaseMenuitemradio[K] };
@@ -591,12 +636,21 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "base-checkbox-group": LocalJSX.IntrinsicElements["base-checkbox-group"] & JSXBase.HTMLAttributes<HTMLBaseCheckboxGroupElement>;
+            /**
+             * Opens its menulist from `contextmenu` over its area. Anchor positioning anchors to elements,
+             * not points, so the menulist gets the pointer in custom properties for a recipe to place it.
+             */
+            "base-context-menu": LocalJSX.IntrinsicElements["base-context-menu"] & JSXBase.HTMLAttributes<HTMLBaseContextMenuElement>;
             "base-drawer": LocalJSX.IntrinsicElements["base-drawer"] & JSXBase.HTMLAttributes<HTMLBaseDrawerElement>;
             "base-field": LocalJSX.IntrinsicElements["base-field"] & JSXBase.HTMLAttributes<HTMLBaseFieldElement>;
             "base-field-error": LocalJSX.IntrinsicElements["base-field-error"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorElement>;
             "base-field-errors": LocalJSX.IntrinsicElements["base-field-errors"] & JSXBase.HTMLAttributes<HTMLBaseFieldErrorsElement>;
             "base-form-error": LocalJSX.IntrinsicElements["base-form-error"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorElement>;
             "base-form-errors": LocalJSX.IntrinsicElements["base-form-errors"] & JSXBase.HTMLAttributes<HTMLBaseFormErrorsElement>;
+            /**
+             * A stand-in for `<menubar>`.
+             */
+            "base-menubar": LocalJSX.IntrinsicElements["base-menubar"] & JSXBase.HTMLAttributes<HTMLBaseMenubarElement>;
             /**
              * A stand-in for `<menuitem>`.
              */

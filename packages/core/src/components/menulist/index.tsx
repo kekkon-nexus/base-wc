@@ -1,7 +1,7 @@
 import { AttachInternals, Component, Element } from "@stencil/core";
 
 import { warnWithoutFocusgroup } from "@/utils/dev";
-import { ITEMS, rootList } from "@/utils/menu";
+import { ITEMS, rootList, sources } from "@/utils/menu";
 
 const HOVER_DELAY = 100;
 
@@ -51,7 +51,9 @@ export class Menulist {
 	}
 
 	#open(list: HTMLElement, source: HTMLElement): void {
-		if (!list.matches(":popover-open")) list.showPopover({ source });
+		if (list.matches(":popover-open")) return;
+		sources.set(list, source);
+		list.showPopover({ source });
 	}
 
 	/** @returns the open submenu lists directly under this list */
@@ -74,11 +76,23 @@ export class Menulist {
 		const { command, source } = event as CommandEvent;
 		if (command !== "--toggle-menu") return;
 		if (this.host.matches(":popover-open")) this.host.hidePopover();
-		else this.#open(this.host, source as HTMLElement);
+		else if (source instanceof HTMLElement) this.#open(this.host, source);
 	};
 
+	/**
+	 * Focus goes back to what opened the menu when closing left it nowhere: the popover API only
+	 * restores the previous focus, and Safari does not focus a clicked item.
+	 *
+	 * @param event the toggle
+	 */
 	#onToggle = (event: Event): void => {
-		if ((event as ToggleEvent).newState !== "open") return;
+		if ((event as ToggleEvent).newState !== "open") {
+			const active = document.activeElement;
+			if (active === document.body || this.host.contains(active)) {
+				sources.get(this.host)?.focus();
+			}
+			return;
+		}
 		this.#focusFirst();
 		// A closed popover is not polyfilled yet, so the check waits for the first open.
 		if (__DEV__) warnWithoutFocusgroup(this.host, "base-menulist");
@@ -130,7 +144,9 @@ export class Menulist {
 			this.#open(submenu, item);
 		} else if (
 			event.key === inlineStart &&
-			this.host.parentElement?.localName === "base-submenu"
+			this.host.parentElement?.localName === "base-submenu" &&
+			// A menubar's own menus move to the previous menu instead.
+			this.host.parentElement.parentElement?.localName !== "base-menubar"
 		) {
 			event.preventDefault();
 			const trigger = this.host.parentElement.querySelector<HTMLElement>(
