@@ -51,6 +51,8 @@ it("swiping the sheet out of view closes the dialog", async () => {
 	const { dialog, drawer } = await mount();
 	dialog.showModal();
 	await expect.poll(() => drawer.scrollTop).toBeGreaterThan(100);
+	// The opening scroll has to settle first, as it would before a person could swipe.
+	await settle();
 
 	drawer.scrollTo({ top: 0, behavior: "instant" });
 
@@ -64,6 +66,8 @@ it("a canceled close snaps the sheet back", async () => {
 	});
 	dialog.showModal();
 	await expect.poll(() => drawer.scrollTop).toBeGreaterThan(100);
+	// The opening scroll has to settle first, as it would before a person could swipe.
+	await settle();
 
 	drawer.scrollTo({ top: 0, behavior: "instant" });
 	await settle();
@@ -76,6 +80,7 @@ it("a scroll that leaves the sheet in view keeps it open", async () => {
 	const { dialog, drawer } = await mount();
 	dialog.showModal();
 	await expect.poll(() => drawer.scrollTop).toBeGreaterThan(100);
+	await settle();
 
 	drawer.scrollTo({ top: 100, behavior: "instant" });
 	await settle();
@@ -87,6 +92,7 @@ it("reopens scrolled to the sheet", async () => {
 	const { dialog, drawer } = await mount();
 	dialog.showModal();
 	await expect.poll(() => drawer.scrollTop).toBeGreaterThan(100);
+	await settle();
 	drawer.scrollTo({ top: 0, behavior: "instant" });
 	await expect.poll(() => dialog.open).toBe(false);
 
